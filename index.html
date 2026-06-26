@@ -595,7 +595,12 @@ function fallback(t){const ta=document.createElement("textarea");ta.value=t;docu
   const modal=document.getElementById("cardModal");
   const nameIn=document.getElementById("modal-name");
   const close=()=>{modal.classList.remove("open");nameIn.classList.remove("err");};
-  document.getElementById("copyBtn").addEventListener("click",()=>{modal.classList.add("open");setTimeout(()=>nameIn.focus(),200);});
+  document.getElementById("copyBtn").addEventListener("click",()=>{
+    const g=window._guestNames;
+    if(g&&g.uz) nameIn.value=g.uz;
+    modal.classList.add("open");
+    setTimeout(()=>{if(!nameIn.value)nameIn.focus();},200);
+  });
   document.getElementById("modal-cancel-btn").addEventListener("click",close);
   modal.addEventListener("click",(e)=>{if(e.target===modal)close();});
   document.getElementById("modal-confirm-btn").addEventListener("click",()=>{
