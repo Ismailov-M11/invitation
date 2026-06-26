@@ -1,4 +1,4 @@
-<!DOCTYPE html>
+﻿<!DOCTYPE html>
 <html lang="uz">
 <head>
 <meta charset="UTF-8" />
@@ -437,7 +437,7 @@ a{color:inherit;text-decoration:none}
     <label class="modal-label">Ismingiz *</label>
     <input class="modal-input" id="modal-name" type="text" placeholder="Familiya Ism">
     <label class="modal-label">Miqdor (ixtiyoriy)</label>
-    <input class="modal-input" id="modal-amount" type="text" placeholder="Masalan: 500 000 so'm">
+    <input class="modal-input" id="modal-amount" type="text" inputmode="numeric" placeholder="Masalan: 500 000 so'm">
     <div class="modal-btns">
       <button class="modal-cancel" id="modal-cancel-btn">Bekor</button>
       <button class="modal-confirm" id="modal-confirm-btn">📋 Nusxalash</button>
@@ -691,6 +691,13 @@ function fallback(t){const ta=document.createElement("textarea");ta.value=t;docu
     if(g){const _n=(window._currentLang==="ru")?(g.ru||g.uz):g.uz;if(_n)nameIn.value=_n;}
     modal.classList.add("open");
     setTimeout(()=>{if(!nameIn.value)nameIn.focus();},200);
+  });
+  document.getElementById("modal-amount").addEventListener("input",function(){
+    const pos=this.selectionStart,oldLen=this.value.length;
+    const raw=this.value.replace(/\D/g,"");
+    this.value=raw?raw.replace(/\B(?=(\d{3})+(?!\d))/g," "):"";
+    const diff=this.value.length-oldLen;
+    this.setSelectionRange(pos+diff,pos+diff);
   });
   document.getElementById("modal-cancel-btn").addEventListener("click",close);
   modal.addEventListener("click",(e)=>{if(e.target===modal)close();});
