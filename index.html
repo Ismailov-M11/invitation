@@ -205,6 +205,23 @@ a{color:inherit;text-decoration:none}
   .petal,.scroll-hint svg,.player.spin svg{animation:none}
   html{scroll-behavior:auto}
 }
+
+/* ============ MODAL ============ */
+.modal-overlay{position:fixed;inset:0;z-index:200;background:rgba(94,34,51,.45);backdrop-filter:blur(5px);display:flex;align-items:center;justify-content:center;padding:24px;opacity:0;pointer-events:none;transition:.25s}
+.modal-overlay.open{opacity:1;pointer-events:all}
+.modal-box{background:#fff;border-radius:14px;padding:32px 26px 26px;width:100%;max-width:360px;box-shadow:0 30px 60px -20px rgba(158,59,82,.45);text-align:center;transform:translateY(16px);transition:.25s}
+.modal-overlay.open .modal-box{transform:none}
+.modal-title{font-family:var(--vibes);color:var(--wine);font-size:2.1rem;margin-bottom:6px}
+.modal-desc{font-family:var(--serif);font-style:italic;color:var(--mauve);font-size:.95rem;margin-bottom:22px}
+.modal-label{font-family:var(--sans);color:var(--text);font-size:.8rem;letter-spacing:.05em;text-transform:uppercase;margin-bottom:6px;display:block;text-align:left;opacity:.8}
+.modal-input{width:100%;border:1.5px solid var(--line);border-radius:8px;padding:11px 14px;font-family:var(--serif);font-size:1rem;color:var(--text);outline:none;margin-bottom:16px;transition:.2s;background:var(--bg-soft)}
+.modal-input:focus{border-color:var(--wine-2);background:#fff}
+.modal-input.err{border-color:#e05;}
+.modal-btns{display:flex;gap:10px;margin-top:6px}
+.modal-cancel{flex:1;padding:11px;border:1.5px solid var(--line);border-radius:999px;font-family:var(--serif);font-size:1rem;color:var(--text);background:#fff;cursor:pointer;transition:.2s}
+.modal-cancel:hover{border-color:var(--wine-2);color:var(--wine)}
+.modal-confirm{flex:2;padding:11px;border:none;border-radius:999px;font-family:var(--serif);font-size:1rem;font-weight:500;color:#fff;background:linear-gradient(135deg,var(--wine-2),var(--wine));cursor:pointer;box-shadow:0 8px 20px -8px rgba(158,59,82,.6);transition:.2s}
+.modal-confirm:hover{transform:translateY(-1px);box-shadow:0 12px 24px -8px rgba(158,59,82,.7)}
 </style>
 </head>
 <body class="locked">
@@ -396,6 +413,22 @@ a{color:inherit;text-decoration:none}
   <div class="credit" data-cfg="credit">Muhabbat bilan yaratildi</div>
 </main>
 
+<!-- ============ MODAL TOYONA ============ -->
+<div class="modal-overlay" id="cardModal">
+  <div class="modal-box">
+    <div class="modal-title">To'yona</div>
+    <p class="modal-desc">Karta raqamini olishdan oldin<br>ma'lumotlarni kiriting</p>
+    <label class="modal-label">Ismingiz *</label>
+    <input class="modal-input" id="modal-name" type="text" placeholder="Familiya Ism">
+    <label class="modal-label">Miqdor (ixtiyoriy)</label>
+    <input class="modal-input" id="modal-amount" type="text" placeholder="Masalan: 500 000 so'm">
+    <div class="modal-btns">
+      <button class="modal-cancel" id="modal-cancel-btn">Bekor</button>
+      <button class="modal-confirm" id="modal-confirm-btn">📋 Nusxalash</button>
+    </div>
+  </div>
+</div>
+
 <button class="player" id="player" aria-label="Music"><svg viewBox="0 0 24 24" fill="none"><path d="M9 18V5l11-2v13" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/><circle cx="6" cy="18" r="3" stroke="currentColor" stroke-width="1.5"/><circle cx="17" cy="16" r="3" stroke="currentColor" stroke-width="1.5"/></svg></button>
 <audio id="audio" loop preload="none"></audio>
 <div class="toast" id="toast"></div>
@@ -544,14 +577,32 @@ tick();setInterval(tick,1000);
 const toast=document.getElementById("toast");let tt;
 function showToast(msg){toast.textContent=msg;toast.classList.add("show");clearTimeout(tt);tt=setTimeout(()=>toast.classList.remove("show"),1800);}
 
-/* ---- копирование номера карты ---- */
-document.getElementById("copyBtn").addEventListener("click",()=>{
-  const num=CONFIG.cardNumber.replace(/\s/g,"");
-  const done=()=>showToast("Nusxalandi ✓");
-  if(navigator.clipboard){navigator.clipboard.writeText(num).then(done).catch(()=>{fallback(num);done();});}
-  else{fallback(num);done();}
-});
+/* ---- маскировка номера карты ---- */
+(function(){
+  const el=document.getElementById("cardNum");
+  if(!el)return;
+  const p=CONFIG.cardNumber.trim().split(/\s+/);
+  el.textContent=p.length>=4?`${p[0]} **** **** ${p[p.length-1]}`:CONFIG.cardNumber;
+})();
+
+/* ---- модалка + копирование карты ---- */
 function fallback(t){const ta=document.createElement("textarea");ta.value=t;document.body.appendChild(ta);ta.select();try{document.execCommand("copy");}catch(_){}ta.remove();}
+(function(){
+  const modal=document.getElementById("cardModal");
+  const nameIn=document.getElementById("modal-name");
+  const close=()=>{modal.classList.remove("open");nameIn.classList.remove("err");};
+  document.getElementById("copyBtn").addEventListener("click",()=>{modal.classList.add("open");setTimeout(()=>nameIn.focus(),200);});
+  document.getElementById("modal-cancel-btn").addEventListener("click",close);
+  modal.addEventListener("click",(e)=>{if(e.target===modal)close();});
+  document.getElementById("modal-confirm-btn").addEventListener("click",()=>{
+    const name=nameIn.value.trim();
+    if(!name){nameIn.classList.add("err");nameIn.focus();return;}
+    const num=CONFIG.cardNumber.replace(/\s/g,"");
+    const done=()=>{close();showToast("Nusxalandi ✓");};
+    if(navigator.clipboard){navigator.clipboard.writeText(num).then(done).catch(()=>{fallback(num);done();});}
+    else{fallback(num);done();}
+  });
+})();
 
 /* ---- плеер ---- */
 const audio=document.getElementById("audio"),player=document.getElementById("player");
@@ -613,10 +664,17 @@ document.getElementById("openBtn").addEventListener("click",openInvite);
       const parts=decoded.split("|",2);
       const nameUz=parts[0]||"";
       const nameRu=parts[1]||"";
-      const el=document.getElementById("guest-greeting");
-      if(el&&(nameUz||nameRu)){
-        el.textContent=nameUz+(nameRu?" / "+nameRu:"");
-        el.style.display="block";
+      if(nameUz){
+        // Обновить "Hurmatli Mehmonimiz" на обложке и в венке
+        document.querySelectorAll('[data-cfg="dearGuest"]').forEach(el=>{
+          el.textContent="Hurmatli "+nameUz+"!";
+        });
+        // Показать русское имя под текстом приглашения
+        const greetingEl=document.getElementById("guest-greeting");
+        if(greetingEl&&nameRu){
+          greetingEl.textContent="Уважаемый(ая): "+nameRu;
+          greetingEl.style.display="block";
+        }
       }
     }
   }
