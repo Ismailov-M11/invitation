@@ -253,6 +253,7 @@ a{color:inherit;text-decoration:none}
   <!-- имена -->
   <section class="sec sec-tight">
     <div class="wrap">
+      <p class="guest-greeting reveal" id="guest-greeting" style="display:none;font-family:var(--serif);font-style:italic;color:var(--wine);font-size:1.1rem;margin-bottom:4px"></p>
       <p class="invitees reveal" data-cfg="invitees">Sizlarni farzandlarimiz</p>
       <div class="names-big reveal"><span data-cfg="groom">Shahboz</span><span class="amp">&amp;</span><span data-cfg="bride">Husnora</span></div>
       <p class="purpose reveal" data-cfg="purpose">nikoh to'ylari munosabati bilan lutfan taklif etamiz</p>
@@ -281,13 +282,13 @@ a{color:inherit;text-decoration:none}
   <section class="sec sec-tight">
     <div class="wrap">
       <div class="events">
-        <div class="ev reveal">
+        <div class="ev reveal" id="ev-morning">
           <div class="ic"><svg viewBox="0 0 24 24" fill="none"><path d="M4 11h16a8 8 0 01-16 0z" stroke="currentColor" stroke-width="1.4" stroke-linejoin="round"/><path d="M12 11V4M9 6c0-2 6-2 6 0" stroke="currentColor" stroke-width="1.4" stroke-linecap="round"/></svg></div>
           <h3 data-cfg="ev1name">Osh</h3>
           <div class="tm" data-cfg="ev1time">Soat 05:00</div>
           <div class="ds" data-cfg="ev1desc">Ertalabki ziyofat</div>
         </div>
-        <div class="ev reveal">
+        <div class="ev reveal" id="ev-evening">
           <div class="ic"><svg viewBox="0 0 24 24" fill="none"><path d="M20 14.5A8 8 0 119.5 4a6.5 6.5 0 1010.5 10.5z" stroke="currentColor" stroke-width="1.4" stroke-linejoin="round"/></svg></div>
           <h3 data-cfg="ev2name">Visol oqshomi</h3>
           <div class="tm" data-cfg="ev2time">Soat 18:00</div>
@@ -579,6 +580,47 @@ function openInvite(){
   observe();
 }
 document.getElementById("openBtn").addEventListener("click",openInvite);
+
+/* ---- URL params: version & guest name ---- */
+(function(){
+  const KEY="w3dding_sh4hb0z_husn0r4_2026";
+
+  function xorDecode(token){
+    try{
+      const pad=token+"===".slice(0,(4-token.length%4)%4);
+      const raw=atob(pad.replace(/-/g,"+").replace(/_/g,"/"));
+      const bytes=new Uint8Array(raw.length);
+      for(let i=0;i<raw.length;i++)bytes[i]=raw.charCodeAt(i);
+      const keyBytes=new TextEncoder().encode(KEY.repeat(Math.ceil(bytes.length/KEY.length))).slice(0,bytes.length);
+      return new TextDecoder("utf-8").decode(bytes.map((b,i)=>b^keyBytes[i]));
+    }catch(e){return null;}
+  }
+
+  const p=new URLSearchParams(location.search);
+  const v=parseInt(p.get("v"))||3;
+  const g=p.get("g");
+
+  const morning=document.getElementById("ev-morning");
+  const evening=document.getElementById("ev-evening");
+  const grid=document.querySelector(".events");
+
+  if(v===1&&evening){evening.style.display="none";if(grid)grid.style.gridTemplateColumns="1fr";}
+  if(v===2&&morning){morning.style.display="none";if(grid)grid.style.gridTemplateColumns="1fr";}
+
+  if(g){
+    const decoded=xorDecode(g);
+    if(decoded){
+      const parts=decoded.split("|",2);
+      const nameUz=parts[0]||"";
+      const nameRu=parts[1]||"";
+      const el=document.getElementById("guest-greeting");
+      if(el&&(nameUz||nameRu)){
+        el.textContent=nameUz+(nameRu?" / "+nameRu:"");
+        el.style.display="block";
+      }
+    }
+  }
+})();
 </script>
 </body>
 </html>
