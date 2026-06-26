@@ -222,9 +222,25 @@ a{color:inherit;text-decoration:none}
 .modal-cancel:hover{border-color:var(--wine-2);color:var(--wine)}
 .modal-confirm{flex:2;padding:13px;border:none;border-radius:999px;font-family:var(--serif);font-size:1.08rem;font-weight:500;color:#fff;background:linear-gradient(135deg,var(--wine-2),var(--wine));cursor:pointer;box-shadow:0 8px 20px -8px rgba(158,59,82,.6);transition:.2s}
 .modal-confirm:hover{transform:translateY(-1px);box-shadow:0 12px 24px -8px rgba(158,59,82,.7)}
+
+/* язык */
+.lang-sw{position:fixed;top:12px;right:12px;z-index:160;display:flex;gap:2px;
+  background:rgba(255,255,255,.9);backdrop-filter:blur(10px);border-radius:999px;
+  padding:4px;border:1px solid rgba(158,59,82,.15);box-shadow:0 4px 14px -4px rgba(158,59,82,.22)}
+.lang-btn{font-family:var(--sans);font-size:.68rem;font-weight:700;padding:5px 10px;
+  border:none;border-radius:999px;cursor:pointer;background:transparent;color:var(--mauve);
+  transition:.2s;letter-spacing:.03em;line-height:1}
+.lang-btn.active{background:var(--wine);color:#fff}
+.lang-btn:hover:not(.active){background:rgba(158,59,82,.08);color:var(--wine)}
 </style>
 </head>
 <body class="locked">
+
+<div class="lang-sw" id="langSw">
+  <button class="lang-btn active" data-lang="uz">UZ</button>
+  <button class="lang-btn" data-lang="uzc">ЎЗ</button>
+  <button class="lang-btn" data-lang="ru">РУ</button>
+</div>
 
 <!-- ============ ОБЛОЖКА ============ -->
 <div class="cover" id="cover">
@@ -434,6 +450,81 @@ a{color:inherit;text-decoration:none}
 <div class="toast" id="toast"></div>
 
 <script>
+/* ============ TRANSLATIONS ============ */
+const LANGS={
+uz:{
+  dearGuest:"Hurmatli Mehmonimiz",hello:"Assalomu alaykum!",
+  openHint:"Taklifnomani ochish uchun bosing",openBtn:"Taklifnomani ochish",
+  scrollHint:"Pastga aylantiring",invitees:"Sizlarni farzandlarimiz",
+  purpose:"nikoh to'ylari munosabati bilan lutfan taklif etamiz",
+  ayat:"Va Uning belgilaridan biri — sizlar uchun o'zlaringizdan juftlar yaratganidirki, ularga sukun toping. U oraliqlaringizga muhabbat va rahmat qo'ydi.",
+  ayatCap:"Rum surasi, 21-oyat",dow:"Shanba",monthYear:"Avgust, 2026",
+  ev1name:"Osh",ev1time:"Soat 05:00",ev1desc:"Ertalabki ziyofat",
+  ev2name:"Visol oqshomi",ev2time:"Soat 18:00",ev2desc:"Kechki bazm",
+  cdTitle:"To'ygacha qolgan vaqt",lDay:"Kun",lHour:"Soat",lMin:"Daqiqa",lSec:"Soniya",
+  hadith:"Nikoh mening sunnatimdir. Kim mening sunnatimga amal qilsa, u mendan.",
+  hadithCap:"Hadisi sharif",familyLbl:"Hurmat va ehtirom ila",family:"Xo'janazarovlar oilasi",
+  locLbl:"Manzil",routeBtn:"Xaritada ochish",contactsTitle:"Ma'lumot uchun",
+  lTg:"Telegram",lPh:"Telefon",lIg:"Instagram",toyonaTitle:"To'yona",
+  toyonaText:"Qalbingizdagi to'yona atamoqchi bo'lsangiz, quyidagi karta raqamidan foydalanishingiz mumkin",
+  copyBtn:"Raqamni nusxalash",closing:"Tashrifingizni kutib qolamiz!",credit:"Muhabbat bilan yaratildi",
+  modalTitle:"To'yona",modalDesc:"Karta raqamini olishdan oldin<br>ma'lumotlarni kiriting",
+  modalLabelName:"Ismingiz *",modalPlaceName:"Familiya Ism",
+  modalLabelAmount:"Miqdor (ixtiyoriy)",modalPlaceAmount:"Masalan: 500 000 so'm",
+  modalCancel:"Bekor",modalConfirm:"📋 Nusxalash",toastCopied:"Nusxalandi ✓",
+  guestPfx:"Hurmatli ",guestNameKey:"uz",
+},
+uzc:{
+  dearGuest:"Ҳурматли Меҳмонимиз",hello:"Ассалому алайкум!",
+  openHint:"Таклифномани очиш учун босинг",openBtn:"Таклифномани очиш",
+  scrollHint:"Пастга айлантиринг",invitees:"Сизларни фарзандларимиз",
+  purpose:"никоҳ тўйлари муносабати билан лутфан таклиф этамиз",
+  ayat:"Ва Унинг белгиларидан бири — сизлар учун ўзларингиздан жуфтлар яратганидирки, уларга сукун топинг. У оралиқларингизга муҳаббат ва раҳмат қўйди.",
+  ayatCap:"Рум сураси, 21-оят",dow:"Шанба",monthYear:"Август, 2026",
+  ev1name:"Ош",ev1time:"Соат 05:00",ev1desc:"Эрталабки зиёфат",
+  ev2name:"Висол оқшоми",ev2time:"Соат 18:00",ev2desc:"Кечки базм",
+  cdTitle:"Тўйгача қолган вақт",lDay:"Кун",lHour:"Соат",lMin:"Дақиқа",lSec:"Сония",
+  hadith:"Никоҳ менинг суннатимдир. Ким менинг суннатимга амал қилса, у мендан.",
+  hadithCap:"Ҳадиси шариф",familyLbl:"Ҳурмат ва эҳтиром ила",family:"Хўжаназаровлар оиласи",
+  locLbl:"Манзил",routeBtn:"Харитада очиш",contactsTitle:"Маълумот учун",
+  lTg:"Telegram",lPh:"Телефон",lIg:"Instagram",toyonaTitle:"Тўёна",
+  toyonaText:"Қалбингиздаги тўёна атамоқчи бўлсангиз, қуйидаги карта рақамидан фойдаланишингиз мумкин",
+  copyBtn:"Рақамни нусхалаш",closing:"Ташрифингизни кутиб қоламиз!",credit:"Муҳаббат билан яратилди",
+  modalTitle:"Тўёна",modalDesc:"Карта рақамини олишдан олдин<br>маълумотларни киринг",
+  modalLabelName:"Исмингиз *",modalPlaceName:"Фамилия Исм",
+  modalLabelAmount:"Миқдор (ихтиёрий)",modalPlaceAmount:"Масалан: 500 000 сўм",
+  modalCancel:"Бекор",modalConfirm:"📋 Нусхалаш",toastCopied:"Нусхаланди ✓",
+  guestPfx:"Ҳурматли ",guestNameKey:"uz",
+},
+ru:{
+  dearGuest:"Уважаемый гость",hello:"Ассаламу алейкум!",
+  openHint:"Нажмите, чтобы открыть приглашение",openBtn:"Открыть приглашение",
+  scrollHint:"Прокрутите вниз",invitees:"Наших детей",
+  purpose:"с любовью приглашают вас на свадьбу",
+  ayat:"Среди Его знамений — то, что Он создал для вас из вас самих супругов, чтобы вы находили успокоение, и установил между вами любовь и милосердие.",
+  ayatCap:"Сура ар-Рум, аят 21",dow:"Суббота",monthYear:"Август, 2026",
+  ev1name:"Плов",ev1time:"05:00",ev1desc:"Утреннее торжество",
+  ev2name:"Вечер встречи",ev2time:"18:00",ev2desc:"Вечерний банкет",
+  cdTitle:"До свадьбы осталось",lDay:"Дней",lHour:"Часов",lMin:"Минут",lSec:"Секунд",
+  hadith:"Никах — это моя сунна. Кто следует моей сунне, тот от меня.",
+  hadithCap:"Хадис Пророка ﷺ",familyLbl:"С уважением и теплом",family:"Семья Хужаназаровых",
+  locLbl:"Адрес",routeBtn:"Открыть на карте",contactsTitle:"Для справки",
+  lTg:"Telegram",lPh:"Телефон",lIg:"Instagram",toyonaTitle:"Подарок",
+  toyonaText:"Если вы желаете сделать подарок, воспользуйтесь картой",
+  copyBtn:"Скопировать номер",closing:"Будем рады видеть вас!",credit:"Создано с любовью",
+  modalTitle:"Подарок",modalDesc:"Перед копированием номера карты<br>пожалуйста, представьтесь",
+  modalLabelName:"Ваше имя *",modalPlaceName:"Фамилия Имя",
+  modalLabelAmount:"Сумма (необязательно)",modalPlaceAmount:"Например: 5 000 руб",
+  modalCancel:"Отмена",modalConfirm:"📋 Скопировать",toastCopied:"Скопировано ✓",
+  guestPfx:"Уважаемый(-ая) ",guestNameKey:"ru",
+},
+};
+const TRANS_KEYS=["dearGuest","hello","openHint","openBtn","scrollHint","invitees","purpose",
+  "ayat","ayatCap","dow","monthYear","ev1name","ev1time","ev1desc","ev2name","ev2time","ev2desc",
+  "cdTitle","lDay","lHour","lMin","lSec","hadith","hadithCap","familyLbl","family",
+  "locLbl","routeBtn","contactsTitle","lTg","lPh","lIg","toyonaTitle","toyonaText",
+  "copyBtn","closing","credit"];
+
 /* ============================================================================
    ╔══════════════════════════════════════════════════════════════════════╗
    ║   РЕДАКТИРУЙ ТОЛЬКО ЭТОТ БЛОК                                          ║
@@ -597,7 +688,7 @@ function fallback(t){const ta=document.createElement("textarea");ta.value=t;docu
   const close=()=>{modal.classList.remove("open");nameIn.classList.remove("err");};
   document.getElementById("copyBtn").addEventListener("click",()=>{
     const g=window._guestNames;
-    if(g&&g.uz) nameIn.value=g.uz;
+    if(g){const _n=(window._currentLang==="ru")?(g.ru||g.uz):g.uz;if(_n)nameIn.value=_n;}
     modal.classList.add("open");
     setTimeout(()=>{if(!nameIn.value)nameIn.focus();},200);
   });
@@ -608,7 +699,7 @@ function fallback(t){const ta=document.createElement("textarea");ta.value=t;docu
     if(!name){nameIn.classList.add("err");nameIn.focus();return;}
     const amount=document.getElementById("modal-amount").value.trim();
     const num=CONFIG.cardNumber.replace(/\s/g,"");
-    const done=()=>{close();showToast("Nusxalandi ✓");};
+    const done=()=>{close();showToast(window._toastCopied||"Nusxalandi ✓");};
     if(navigator.clipboard){navigator.clipboard.writeText(num).then(done).catch(()=>{fallback(num);done();});}
     else{fallback(num);done();}
     // Уведомить бота
@@ -685,20 +776,49 @@ document.getElementById("openBtn").addEventListener("click",openInvite);
       const nameRu=parts[1]||"";
       if(nameUz){
         window._guestNames={uz:nameUz,ru:nameRu};
-        // Обновить "Hurmatli Mehmonimiz" на обложке и в венке
-        document.querySelectorAll('[data-cfg="dearGuest"]').forEach(el=>{
-          el.textContent="Hurmatli "+nameUz+"!";
-        });
-        // Показать русское имя под текстом приглашения
-        const greetingEl=document.getElementById("guest-greeting");
-        if(greetingEl&&nameRu){
-          greetingEl.textContent="Уважаемый(ая): "+nameRu;
-          greetingEl.style.display="block";
-        }
       }
     }
   }
 })();
+/* ---- setLang ---- */
+function setLang(lang){
+  const t=LANGS[lang];if(!t)return;
+  window._currentLang=lang;
+  window._toastCopied=t.toastCopied;
+  try{localStorage.setItem("inv_lang",lang);}catch(_){}
+  TRANS_KEYS.forEach(k=>{
+    if(t[k]!==undefined)
+      document.querySelectorAll('[data-cfg="'+k+'"]').forEach(el=>el.textContent=t[k]);
+  });
+  // personalized guest name
+  const gn=window._guestNames;
+  if(gn&&gn.uz){
+    const name=t.guestNameKey==="ru"?(gn.ru||gn.uz):gn.uz;
+    document.querySelectorAll('[data-cfg="dearGuest"]').forEach(el=>el.textContent=t.guestPfx+name+"!");
+    const greet=document.getElementById("guest-greeting");
+    if(greet){greet.textContent=t.guestPfx+name+"!";greet.style.display="block";}
+  }
+  // modal
+  const q=s=>document.querySelector(s);
+  if(q(".modal-title"))q(".modal-title").textContent=t.modalTitle;
+  if(q(".modal-desc"))q(".modal-desc").innerHTML=t.modalDesc;
+  const labs=document.querySelectorAll(".modal-label");
+  if(labs[0])labs[0].textContent=t.modalLabelName;
+  if(labs[1])labs[1].textContent=t.modalLabelAmount;
+  const inps=document.querySelectorAll(".modal-input");
+  if(inps[0])inps[0].placeholder=t.modalPlaceName;
+  if(inps[1])inps[1].placeholder=t.modalPlaceAmount;
+  const mc=document.getElementById("modal-cancel-btn");if(mc)mc.textContent=t.modalCancel;
+  const mf=document.getElementById("modal-confirm-btn");if(mf)mf.textContent=t.modalConfirm;
+  // active button
+  document.querySelectorAll(".lang-btn").forEach(b=>b.classList.toggle("active",b.dataset.lang===lang));
+}
+
+/* ---- language switcher init ---- */
+document.querySelectorAll(".lang-btn").forEach(btn=>{
+  btn.addEventListener("click",()=>setLang(btn.dataset.lang));
+});
+try{setLang(localStorage.getItem("inv_lang")||"uz");}catch(_){setLang("uz");}
 </script>
 </body>
 </html>
