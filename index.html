@@ -1,0 +1,589 @@
+<!DOCTYPE html>
+<html lang="uz">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>To'y taklifnomasi</title>
+<meta name="description" content="Wedding invitation" />
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Great+Vibes&family=Cormorant+Garamond:ital,wght@0,400;0,500;0,600;1,400;1,500&family=Manrope:wght@300;400;500;600&display=swap" rel="stylesheet">
+<style>
+:root{
+  --bg:        #F7EAE6;   /* пыльно-розовый фон */
+  --bg-soft:   #FBF2EF;
+  --card:      #FFFFFF;
+  --wine:      #9E3B52;   /* бордово-розовая каллиграфия */
+  --wine-2:    #B85A6E;
+  --mauve:     #9B7B82;   /* подзаголовки */
+  --text:      #7C6A6B;   /* основной текст */
+  --gold:      #C9A86A;
+  --sage:      #A7A79B;   /* серо-зелёные иконки событий */
+  --maroon-1:  #5E2233;   /* карта банка */
+  --maroon-2:  #803249;
+  --line:      rgba(158,59,82,.22);
+
+  --vibes:  'Great Vibes', cursive;
+  --serif:  'Cormorant Garamond', Georgia, serif;
+  --sans:   'Manrope', system-ui, sans-serif;
+  --maxw: 560px;
+}
+*{box-sizing:border-box;margin:0;padding:0}
+html{scroll-behavior:smooth;-webkit-font-smoothing:antialiased}
+body{font-family:var(--serif);color:var(--text);background:var(--bg);line-height:1.7;overflow-x:hidden}
+body.locked{overflow:hidden;height:100vh}
+img{max-width:100%;display:block}
+a{color:inherit;text-decoration:none}
+
+.wrap{max-width:var(--maxw);margin:0 auto;padding:0 28px}
+.script{font-family:var(--vibes);color:var(--wine);line-height:1.05;font-weight:400}
+.serif-it{font-family:var(--serif);font-style:italic}
+.eyebrow{font-family:var(--serif);font-style:italic;color:var(--mauve);font-size:1.05rem;letter-spacing:.02em}
+.gold-div{display:flex;align-items:center;justify-content:center;gap:14px;margin:22px auto;max-width:200px}
+.gold-div .r{flex:1;height:1px;background:linear-gradient(90deg,transparent,var(--gold),transparent)}
+.gold-div .d{width:6px;height:6px;border-radius:50%;background:var(--gold);flex:none}
+
+/* ============ ОБЛОЖКА ============ */
+.cover{position:fixed;inset:0;z-index:100;background:
+  radial-gradient(120% 80% at 50% 10%, var(--bg-soft), var(--bg) 75%);
+  display:flex;align-items:center;justify-content:center;padding:24px;
+  transition:transform 1.1s cubic-bezier(.7,0,.2,1),opacity 1.1s ease}
+.cover.gone{transform:translateY(-104%);opacity:0;pointer-events:none}
+.cover-card{position:relative;width:100%;max-width:420px;min-height:78vh;
+  background:linear-gradient(170deg,#FFFFFF,#FBF1EE);
+  border-radius:8px;box-shadow:0 30px 70px -30px rgba(158,59,82,.35);
+  display:flex;flex-direction:column;align-items:center;justify-content:center;
+  padding:54px 30px;text-align:center;overflow:hidden}
+.cover-card .corner{position:absolute;width:150px;height:150px;opacity:.95}
+.cover-card .corner.tl{top:0;left:0}
+.cover-card .corner.tr{top:0;right:0;transform:scaleX(-1)}
+.cover-card .corner.bl{bottom:0;left:0;transform:scaleY(-1)}
+.cover-card .corner.br{bottom:0;right:0;transform:scale(-1,-1)}
+.cover-heart{color:var(--wine-2);font-size:1.2rem;margin-bottom:18px}
+.cover-card .eyebrow{margin-bottom:6px}
+.cover-names{font-family:var(--vibes);color:var(--wine);font-size:3.4rem;line-height:1.15;margin:4px 0}
+.cover-names .amp{display:block;font-size:1.5rem;color:var(--wine-2);margin:2px 0}
+.cover-date{font-family:var(--serif);font-size:1.5rem;letter-spacing:.32em;color:var(--text);margin:14px 0 6px;font-weight:500}
+.cover-hint{font-family:var(--serif);font-style:italic;color:var(--mauve);font-size:.98rem;margin-top:26px;margin-bottom:14px}
+.open-btn{position:relative;display:inline-flex;align-items:center;gap:10px;
+  font-family:var(--serif);font-size:1.18rem;font-weight:500;letter-spacing:.02em;
+  color:#fff;padding:15px 34px;border:none;border-radius:999px;cursor:pointer;
+  background:linear-gradient(135deg,var(--wine-2),var(--wine));
+  box-shadow:0 14px 28px -10px rgba(158,59,82,.6);transition:transform .2s,box-shadow .2s}
+.open-btn:hover{transform:translateY(-2px);box-shadow:0 18px 34px -10px rgba(158,59,82,.7)}
+.open-btn svg{width:19px;height:19px}
+
+/* ============ ЛЕНТА ============ */
+.main{position:relative}
+.petal-field{position:fixed;inset:0;pointer-events:none;z-index:0;overflow:hidden}
+.petal{position:absolute;width:11px;height:11px;background:radial-gradient(circle at 30% 30%,#F4C9D2,#E59FB0);
+  border-radius:60% 0 60% 0;opacity:.55;animation:fall linear infinite}
+@keyframes fall{0%{transform:translateY(-10vh) rotate(0)}100%{transform:translateY(110vh) rotate(360deg)}}
+.sec{position:relative;z-index:1;padding:clamp(46px,9vw,76px) 0;text-align:center}
+.sec-tight{padding:clamp(26px,6vw,44px) 0}
+
+.wreath-sec{padding-top:54px}
+.wreath{position:relative;width:min(90%,420px);margin:0 auto}
+.wreath .center{position:absolute;inset:0;display:flex;flex-direction:column;align-items:center;justify-content:center}
+.wreath .center .hello{font-family:var(--vibes);color:var(--wine);font-size:clamp(2rem,9vw,2.9rem)}
+.wreath .center .sub{font-family:var(--serif);font-style:italic;color:var(--mauve);font-size:1.05rem;margin-top:2px}
+.scroll-hint{margin-top:14px;color:var(--mauve);font-family:var(--serif);font-style:italic;font-size:.9rem;display:flex;flex-direction:column;align-items:center;gap:4px}
+.scroll-hint svg{width:20px;height:20px;color:var(--wine-2);animation:bob 2s infinite}
+@keyframes bob{0%,100%{transform:translateY(0);opacity:.6}50%{transform:translateY(6px);opacity:1}}
+
+.invitees{font-family:var(--serif);font-style:italic;color:var(--mauve);font-size:1.1rem}
+.names-big{font-family:var(--vibes);color:var(--wine);font-size:clamp(3rem,15vw,4.6rem);line-height:1.1;margin:6px 0}
+.names-big .amp{display:block;font-size:.42em;color:var(--wine-2)}
+.purpose{font-family:var(--serif);color:var(--text);font-size:1.12rem;max-width:24ch;margin:6px auto 0}
+
+.divider-flower{width:200px;margin:30px auto}
+
+.ayat{font-family:var(--serif);font-style:italic;color:var(--text);font-size:1.16rem;max-width:34ch;margin:0 auto;line-height:1.6}
+.ayat-cap{font-family:var(--serif);font-style:italic;color:var(--mauve);font-size:.92rem;margin-top:14px}
+
+/* карта даты */
+.date-card{background:var(--card);border-radius:8px;box-shadow:0 18px 40px -24px rgba(158,59,82,.35);
+  width:min(70%,230px);margin:0 auto;padding:26px 20px;border:1px solid var(--line)}
+.date-card .dow{font-family:var(--serif);font-style:italic;color:var(--mauve);font-size:1.05rem}
+.date-card .num{font-family:var(--serif);font-size:3.4rem;font-weight:500;color:var(--wine);line-height:1.05;letter-spacing:.04em}
+.date-card .my{font-family:var(--serif);letter-spacing:.16em;text-transform:uppercase;color:var(--text);font-size:.82rem}
+
+/* карточки событий */
+.events{display:grid;grid-template-columns:1fr 1fr;gap:16px;max-width:430px;margin:26px auto 0}
+.ev{background:var(--card);border-radius:8px;border:1px solid var(--line);
+  box-shadow:0 16px 34px -24px rgba(158,59,82,.3);padding:26px 16px}
+.ev .ic{width:52px;height:52px;border-radius:50%;background:var(--sage);
+  display:flex;align-items:center;justify-content:center;margin:0 auto 14px}
+.ev .ic svg{width:26px;height:26px;color:#fff}
+.ev h3{font-family:var(--serif);font-weight:600;font-size:1.3rem;color:var(--wine);margin-bottom:4px}
+.ev .tm{font-family:var(--serif);color:var(--wine-2);font-size:1.05rem}
+.ev .ds{font-family:var(--serif);font-style:italic;color:var(--mauve);font-size:.9rem;margin-top:2px}
+
+/* отсчёт */
+.cd-title{font-family:var(--serif);font-style:italic;color:var(--mauve);font-size:1.15rem;margin-bottom:22px}
+.cd-grid{display:flex;justify-content:center;gap:10px;flex-wrap:wrap}
+.cd-box{background:var(--card);border:1px solid var(--line);border-radius:8px;
+  box-shadow:0 14px 30px -24px rgba(158,59,82,.3);min-width:68px;padding:14px 8px}
+.cd-num{font-family:var(--serif);font-weight:600;font-size:2rem;color:var(--wine);line-height:1}
+.cd-lab{font-family:var(--serif);font-style:italic;color:var(--mauve);font-size:.8rem;margin-top:4px}
+
+/* хадис */
+.hadith-q{font-family:var(--vibes);color:var(--wine-2);font-size:2.4rem;line-height:0;display:block;height:14px}
+.hadith{font-family:var(--serif);font-style:italic;color:var(--text);font-size:1.14rem;max-width:30ch;margin:0 auto;line-height:1.6}
+.hadith-cap{font-family:var(--serif);font-style:italic;color:var(--mauve);font-size:.92rem;margin-top:12px}
+
+.family-lbl{font-family:var(--serif);font-style:italic;color:var(--mauve);font-size:1.05rem}
+.family{font-family:var(--vibes);color:var(--wine);font-size:clamp(2.2rem,11vw,3.2rem);line-height:1.1;margin-top:4px}
+
+/* локация */
+.loc-pin{color:var(--wine-2);margin-bottom:8px}
+.loc-pin svg{width:30px;height:30px;margin:0 auto}
+.loc-lbl{font-family:var(--serif);font-style:italic;color:var(--mauve)}
+.loc-name{font-family:var(--serif);font-weight:600;font-size:1.7rem;color:var(--wine);margin:2px 0}
+.loc-addr{font-family:var(--serif);font-style:italic;color:var(--mauve);font-size:.95rem}
+.map-frame{margin:22px auto 0;max-width:430px;border-radius:10px;overflow:hidden;border:1px solid var(--line);aspect-ratio:3/2;box-shadow:0 16px 34px -24px rgba(158,59,82,.3)}
+.map-frame iframe{width:100%;height:100%;border:0;display:block}
+.pill{display:inline-flex;align-items:center;gap:9px;font-family:var(--serif);font-size:1.05rem;font-weight:500;
+  color:#fff;padding:13px 28px;border-radius:999px;cursor:pointer;border:none;margin-top:20px;
+  background:linear-gradient(135deg,var(--wine-2),var(--wine));box-shadow:0 14px 28px -12px rgba(158,59,82,.55);transition:transform .2s}
+.pill:hover{transform:translateY(-2px)}
+.pill svg{width:17px;height:17px}
+
+/* контакты */
+.contacts{max-width:400px;margin:24px auto 0;display:flex;flex-direction:column;gap:12px}
+.contact{display:flex;align-items:center;gap:14px;background:var(--card);border:1px solid var(--line);
+  border-radius:10px;padding:14px 18px;text-align:left;box-shadow:0 12px 26px -22px rgba(158,59,82,.3)}
+.contact .ci{width:38px;height:38px;border-radius:10px;flex:none;display:flex;align-items:center;justify-content:center}
+.contact .ci svg{width:20px;height:20px;color:#fff}
+.contact .cl{font-family:var(--serif);font-style:italic;color:var(--mauve);font-size:.85rem}
+.contact .cv{font-family:var(--sans);font-weight:500;color:var(--text);font-size:.98rem}
+.ci.tg{background:#2AABEE}.ci.ph{background:#5BAE7C}.ci.ig{background:linear-gradient(45deg,#F58529,#DD2A7B,#8134AF)}
+
+/* to'yona / карта банка */
+.toyona-text{font-family:var(--serif);font-style:italic;color:var(--mauve);max-width:30ch;margin:0 auto 22px;font-size:1rem}
+.bankcard{position:relative;width:min(88%,340px);aspect-ratio:1.586;margin:0 auto;border-radius:16px;
+  background:linear-gradient(135deg,#6E2A3D,#4A1A28 70%);color:#F3DCE2;text-align:left;
+  padding:22px;box-shadow:0 22px 44px -20px rgba(94,34,51,.7);overflow:hidden}
+.bankcard::after{content:"";position:absolute;top:-40%;right:-20%;width:200px;height:200px;border-radius:50%;
+  background:radial-gradient(circle,rgba(243,220,226,.14),transparent 70%)}
+.bankcard .bank{font-family:var(--sans);font-weight:600;letter-spacing:.04em;font-size:.95rem}
+.bankcard .chip{position:absolute;top:54px;right:22px;width:34px;height:26px;border-radius:5px;
+  background:linear-gradient(135deg,#E7C98A,#C99A52)}
+.bankcard .num{font-family:'Manrope',monospace;font-size:1.24rem;letter-spacing:.12em;position:absolute;bottom:54px;left:22px}
+.bankcard .holder-l{position:absolute;bottom:30px;left:22px;font-family:var(--sans);font-size:.6rem;letter-spacing:.12em;opacity:.7;text-transform:uppercase}
+.bankcard .holder{position:absolute;bottom:14px;left:22px;font-family:var(--sans);font-weight:500;letter-spacing:.08em;font-size:.92rem}
+.copy-btn{display:inline-flex;align-items:center;gap:8px;font-family:var(--serif);font-size:1rem;font-weight:500;
+  color:var(--wine);background:var(--card);border:1px solid var(--line);padding:11px 22px;border-radius:999px;cursor:pointer;margin-top:20px;transition:.2s}
+.copy-btn:hover{background:var(--wine);color:#fff;border-color:var(--wine)}
+.copy-btn svg{width:15px;height:15px}
+
+.closing{font-family:var(--vibes);color:var(--wine);font-size:clamp(1.8rem,8vw,2.6rem);margin-top:8px}
+.closing-heart{color:var(--wine-2);font-size:1.2rem;margin-top:10px}
+.credit{font-family:var(--sans);font-size:.7rem;letter-spacing:.1em;color:var(--mauve);opacity:.6;padding:24px 0 30px;text-align:center}
+
+/* плеер */
+.player{position:fixed;right:16px;bottom:16px;z-index:90;width:46px;height:46px;border-radius:50%;
+  background:rgba(158,59,82,.9);border:none;color:#fff;cursor:pointer;display:none;align-items:center;justify-content:center;
+  box-shadow:0 10px 24px -8px rgba(158,59,82,.6)}
+.player svg{width:20px;height:20px}
+.player.spin svg{animation:spin 4s linear infinite}
+@keyframes spin{to{transform:rotate(360deg)}}
+
+/* тост */
+.toast{position:fixed;left:50%;bottom:26px;transform:translateX(-50%) translateY(20px);z-index:120;
+  background:var(--wine);color:#fff;font-family:var(--serif);padding:11px 24px;border-radius:999px;
+  opacity:0;transition:.3s;pointer-events:none;font-size:1rem}
+.toast.show{opacity:1;transform:translateX(-50%) translateY(0)}
+
+/* эффекты раскрытия */
+.reveal{opacity:0;transform:translateY(34px);transition:opacity 1s ease,transform 1s cubic-bezier(.2,.7,.2,1)}
+.reveal.in{opacity:1;transform:none}
+.reveal-zoom{opacity:0;transform:scale(.86);transition:opacity 1.2s ease,transform 1.2s cubic-bezier(.2,.7,.2,1)}
+.reveal-zoom.in{opacity:1;transform:none}
+@media(prefers-reduced-motion:reduce){
+  .reveal,.reveal-zoom{opacity:1;transform:none;transition:none}
+  .petal,.scroll-hint svg,.player.spin svg{animation:none}
+  html{scroll-behavior:auto}
+}
+</style>
+</head>
+<body class="locked">
+
+<!-- ============ ОБЛОЖКА ============ -->
+<div class="cover" id="cover">
+  <div class="cover-card">
+    <div class="corner tl" data-flower="corner"></div>
+    <div class="corner tr" data-flower="corner"></div>
+    <div class="corner bl" data-flower="corner"></div>
+    <div class="corner br" data-flower="corner"></div>
+    <div class="cover-heart">&#10084;</div>
+    <p class="eyebrow" data-cfg="dearGuest">Hurmatli Mehmonimiz</p>
+    <div class="cover-names"><span data-cfg="groom">Shahboz</span><span class="amp">&amp;</span><span data-cfg="bride">Husnora</span></div>
+    <div class="cover-date" data-cfg="dateDots">15.08.2026</div>
+    <div class="gold-div"><span class="r"></span><span class="d"></span><span class="r"></span></div>
+    <p class="cover-hint" data-cfg="openHint">Taklifnomani ochish uchun bosing</p>
+    <button class="open-btn" id="openBtn">
+      <svg viewBox="0 0 24 24" fill="none"><rect x="3" y="5" width="18" height="14" rx="2" stroke="currentColor" stroke-width="1.5"/><path d="M3 7l9 6 9-6" stroke="currentColor" stroke-width="1.5"/></svg>
+      <span data-cfg="openBtn">Taklifnomani ochish</span>
+    </button>
+  </div>
+</div>
+
+<!-- ============ ЛЕНТА ============ -->
+<main class="main" id="main">
+  <div class="petal-field" id="petals"></div>
+
+  <!-- венок -->
+  <section class="sec wreath-sec">
+    <div class="wrap">
+      <div class="wreath reveal-zoom">
+        <div data-flower="wreath"></div>
+        <div class="center">
+          <div class="hello" data-cfg="hello">Assalomu alaykum!</div>
+          <div class="sub" data-cfg="dearGuest">Hurmatli Mehmonimiz</div>
+        </div>
+      </div>
+      <div class="scroll-hint reveal">
+        <span data-cfg="scrollHint">Pastga aylantiring</span>
+        <svg viewBox="0 0 24 24" fill="none"><path d="M6 9l6 6 6-6" stroke="currentColor" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round"/></svg>
+      </div>
+    </div>
+  </section>
+
+  <!-- имена -->
+  <section class="sec sec-tight">
+    <div class="wrap">
+      <p class="invitees reveal" data-cfg="invitees">Sizlarni farzandlarimiz</p>
+      <div class="names-big reveal"><span data-cfg="groom">Shahboz</span><span class="amp">&amp;</span><span data-cfg="bride">Husnora</span></div>
+      <p class="purpose reveal" data-cfg="purpose">nikoh to'ylari munosabati bilan lutfan taklif etamiz</p>
+      <div class="divider-flower reveal-zoom" data-flower="divider"></div>
+    </div>
+  </section>
+
+  <!-- аят -->
+  <section class="sec sec-tight">
+    <div class="wrap">
+      <p class="ayat reveal" data-cfg="ayat">Va Uning belgilaridan biri — sizlar uchun o'zlaringizdan juftlar yaratganidirki, ularga sukun toping. U oraliqlaringizga muhabbat va rahmat qo'ydi.</p>
+      <p class="ayat-cap reveal" data-cfg="ayatCap">Rum surasi, 21-oyat</p>
+    </div>
+  </section>
+
+  <!-- дата -->
+  <section class="sec sec-tight">
+    <div class="date-card reveal">
+      <div class="dow" data-cfg="dow">Shanba</div>
+      <div class="num" data-cfg="day">15</div>
+      <div class="my" data-cfg="monthYear">Avgust, 2026</div>
+    </div>
+  </section>
+
+  <!-- события -->
+  <section class="sec sec-tight">
+    <div class="wrap">
+      <div class="events">
+        <div class="ev reveal">
+          <div class="ic"><svg viewBox="0 0 24 24" fill="none"><path d="M4 11h16a8 8 0 01-16 0z" stroke="currentColor" stroke-width="1.4" stroke-linejoin="round"/><path d="M12 11V4M9 6c0-2 6-2 6 0" stroke="currentColor" stroke-width="1.4" stroke-linecap="round"/></svg></div>
+          <h3 data-cfg="ev1name">Osh</h3>
+          <div class="tm" data-cfg="ev1time">Soat 05:00</div>
+          <div class="ds" data-cfg="ev1desc">Ertalabki ziyofat</div>
+        </div>
+        <div class="ev reveal">
+          <div class="ic"><svg viewBox="0 0 24 24" fill="none"><path d="M20 14.5A8 8 0 119.5 4a6.5 6.5 0 1010.5 10.5z" stroke="currentColor" stroke-width="1.4" stroke-linejoin="round"/></svg></div>
+          <h3 data-cfg="ev2name">Visol oqshomi</h3>
+          <div class="tm" data-cfg="ev2time">Soat 18:00</div>
+          <div class="ds" data-cfg="ev2desc">Kechki bazm</div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- отсчёт -->
+  <section class="sec sec-tight">
+    <div class="wrap reveal">
+      <p class="cd-title" data-cfg="cdTitle">To'ygacha qolgan vaqt</p>
+      <div class="cd-grid" id="cd">
+        <div class="cd-box"><div class="cd-num" id="cd-d">—</div><div class="cd-lab" data-cfg="lDay">Kun</div></div>
+        <div class="cd-box"><div class="cd-num" id="cd-h">—</div><div class="cd-lab" data-cfg="lHour">Soat</div></div>
+        <div class="cd-box"><div class="cd-num" id="cd-m">—</div><div class="cd-lab" data-cfg="lMin">Daqiqa</div></div>
+        <div class="cd-box"><div class="cd-num" id="cd-s">—</div><div class="cd-lab" data-cfg="lSec">Soniya</div></div>
+      </div>
+    </div>
+  </section>
+
+  <!-- хадис -->
+  <section class="sec sec-tight">
+    <div class="wrap reveal">
+      <span class="hadith-q">&#8220;</span>
+      <p class="hadith" data-cfg="hadith">Nikoh mening sunnatimdir. Kim mening sunnatimga amal qilsa, u mendan.</p>
+      <p class="hadith-cap" data-cfg="hadithCap">Hadisi sharif</p>
+    </div>
+  </section>
+
+  <!-- семья -->
+  <section class="sec sec-tight">
+    <div class="wrap reveal">
+      <p class="family-lbl" data-cfg="familyLbl">Hurmat va ehtirom ila</p>
+      <div class="family" data-cfg="family">Xo'janazarovlar oilasi</div>
+    </div>
+  </section>
+
+  <!-- локация -->
+  <section class="sec sec-tight">
+    <div class="wrap">
+      <div class="reveal">
+        <div class="loc-pin"><svg viewBox="0 0 24 24" fill="none"><path d="M12 22s7-5.6 7-11a7 7 0 10-14 0c0 5.4 7 11 7 11z" stroke="currentColor" stroke-width="1.4"/><circle cx="12" cy="11" r="2.4" stroke="currentColor" stroke-width="1.4"/></svg></div>
+        <p class="loc-lbl" data-cfg="locLbl">Manzil</p>
+        <div class="loc-name" data-cfg="venue">Sher to'yxonasi</div>
+        <p class="loc-addr" data-cfg="address">Toshkent viloyati, Chinoz tumani</p>
+      </div>
+      <div class="map-frame reveal"><iframe id="map" loading="lazy" referrerpolicy="no-referrer-when-downgrade" title="Map"></iframe></div>
+      <a class="pill reveal" id="btn-route" target="_blank" rel="noopener">
+        <svg viewBox="0 0 24 24" fill="none"><path d="M12 22s7-5.6 7-11a7 7 0 10-14 0c0 5.4 7 11 7 11z" stroke="currentColor" stroke-width="1.5"/><circle cx="12" cy="11" r="2.2" stroke="currentColor" stroke-width="1.5"/></svg>
+        <span data-cfg="routeBtn">Xaritada ochish</span>
+      </a>
+    </div>
+  </section>
+
+  <!-- контакты -->
+  <section class="sec sec-tight">
+    <div class="wrap">
+      <p class="cd-title reveal" data-cfg="contactsTitle">Ma'lumot uchun</p>
+      <div class="contacts">
+        <a class="contact reveal" id="c-tg" target="_blank" rel="noopener">
+          <span class="ci tg"><svg viewBox="0 0 24 24" fill="currentColor"><path d="M21.9 4.3l-3.3 15.6c-.2 1-.9 1.3-1.8.8l-5-3.7-2.4 2.3c-.3.3-.5.5-1 .5l.4-5 9.1-8.2c.4-.4-.1-.6-.6-.2L4.2 13.4l-4.8-1.5c-1-.3-1-1 .2-1.5L20.6 2.9c.9-.3 1.6.2 1.3 1.4z"/></svg></span>
+          <span><span class="cl" data-cfg="lTg">Telegram</span><br><span class="cv" data-cfg="telegram">@username</span></span>
+        </a>
+        <a class="contact reveal" id="c-ph">
+          <span class="ci ph"><svg viewBox="0 0 24 24" fill="none"><path d="M5 4h4l2 5-3 2a11 11 0 005 5l2-3 5 2v4a2 2 0 01-2 2A16 16 0 013 6a2 2 0 012-2z" stroke="currentColor" stroke-width="1.5" stroke-linejoin="round"/></svg></span>
+          <span><span class="cl" data-cfg="lPh">Telefon</span><br><span class="cv" data-cfg="phone">+998 90 123 45 67</span></span>
+        </a>
+        <a class="contact reveal" id="c-ig" target="_blank" rel="noopener">
+          <span class="ci ig"><svg viewBox="0 0 24 24" fill="none"><rect x="3" y="3" width="18" height="18" rx="5" stroke="currentColor" stroke-width="1.5"/><circle cx="12" cy="12" r="4" stroke="currentColor" stroke-width="1.5"/><circle cx="17.5" cy="6.5" r="1.2" fill="currentColor"/></svg></span>
+          <span><span class="cl" data-cfg="lIg">Instagram</span><br><span class="cv" data-cfg="instagram">@username</span></span>
+        </a>
+      </div>
+    </div>
+  </section>
+
+  <!-- to'yona -->
+  <section class="sec sec-tight">
+    <div class="wrap">
+      <p class="cd-title reveal" data-cfg="toyonaTitle">To'yona</p>
+      <p class="toyona-text reveal" data-cfg="toyonaText">Qalbingizdagi to'yona atamoqchi bo'lsangiz, quyidagi karta raqamidan foydalanishingiz mumkin</p>
+      <div class="bankcard reveal-zoom">
+        <div class="bank" data-cfg="bankName">Kapital Bank</div>
+        <div class="chip"></div>
+        <div class="num" id="cardNum" data-cfg="cardNumber">8600 0312 5614 9920</div>
+        <div class="holder-l">Card holder</div>
+        <div class="holder" data-cfg="cardHolder">CARD HOLDER</div>
+      </div>
+      <button class="copy-btn reveal" id="copyBtn">
+        <svg viewBox="0 0 24 24" fill="none"><rect x="9" y="9" width="11" height="11" rx="2" stroke="currentColor" stroke-width="1.5"/><path d="M5 15V5a2 2 0 012-2h10" stroke="currentColor" stroke-width="1.5"/></svg>
+        <span data-cfg="copyBtn">Raqamni nusxalash</span>
+      </button>
+    </div>
+  </section>
+
+  <!-- финал -->
+  <section class="sec">
+    <div class="wrap">
+      <div class="divider-flower reveal-zoom" data-flower="bottom" style="width:260px"></div>
+      <div class="closing reveal" data-cfg="closing">Tashrifingizni kutib qolamiz!</div>
+      <div class="closing-heart reveal">&#10084;</div>
+    </div>
+  </section>
+  <div class="credit" data-cfg="credit">Muhabbat bilan yaratildi</div>
+</main>
+
+<button class="player" id="player" aria-label="Music"><svg viewBox="0 0 24 24" fill="none"><path d="M9 18V5l11-2v13" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/><circle cx="6" cy="18" r="3" stroke="currentColor" stroke-width="1.5"/><circle cx="17" cy="16" r="3" stroke="currentColor" stroke-width="1.5"/></svg></button>
+<audio id="audio" loop preload="none"></audio>
+<div class="toast" id="toast"></div>
+
+<script>
+/* ============================================================================
+   ╔══════════════════════════════════════════════════════════════════════╗
+   ║   РЕДАКТИРУЙ ТОЛЬКО ЭТОТ БЛОК                                          ║
+   ╚══════════════════════════════════════════════════════════════════════╝
+   ============================================================================ */
+const CONFIG = {
+  groom:"Shahboz",
+  bride:"Husnora",
+
+  datetime:"2026-08-15T18:00:00+05:00",   // целевое время отсчёта (НЕ удаляй +05:00)
+  dateDots:"15.08.2026",
+  dow:"Shanba", day:"15", monthYear:"Avgust, 2026",
+
+  // события
+  ev1name:"Osh", ev1time:"Soat 05:00", ev1desc:"Ertalabki ziyofat",
+  ev2name:"Visol oqshomi", ev2time:"Soat 18:00", ev2desc:"Kechki bazm",
+
+  // семья
+  family:"Xo'janazarovlar oilasi",
+
+  // место
+  venue:"Sher to'yxonasi",
+  address:"Toshkent viloyati, Chinoz tumani",
+  coords:{ lat:40.9300, lng:68.7600 },
+
+  // контакты
+  telegram:"@username", telegramUrl:"https://t.me/username",
+  phone:"+998 90 123 45 67", phoneTel:"+998901234567",
+  instagram:"@username", instagramUrl:"https://instagram.com/username",
+
+  // карта банка (потом поменяешь)
+  bankName:"Kapital Bank",
+  cardNumber:"8600 0312 5614 9920",
+  cardHolder:"CARD HOLDER",
+
+  // музыка: ссылка на .mp3 → запустится при нажатии «Открыть». Пусто = без музыки.
+  music:"",
+
+  // СВОЯ акварель (по желанию): ссылки на PNG. Пусто = мои нарисованные цветы.
+  wreathImage:"", cornerImage:"", dividerImage:"", bottomImage:"",
+
+  // тексты (можно править)
+  dearGuest:"Hurmatli Mehmonimiz",
+  hello:"Assalomu alaykum!",
+  openHint:"Taklifnomani ochish uchun bosing",
+  openBtn:"Taklifnomani ochish",
+  scrollHint:"Pastga aylantiring",
+  invitees:"Sizlarni farzandlarimiz",
+  purpose:"nikoh to'ylari munosabati bilan lutfan taklif etamiz",
+  ayat:"Va Uning belgilaridan biri — sizlar uchun o'zlaringizdan juftlar yaratganidirki, ularga sukun toping. U oraliqlaringizga muhabbat va rahmat qo'ydi.",
+  ayatCap:"Rum surasi, 21-oyat",
+  cdTitle:"To'ygacha qolgan vaqt",
+  lDay:"Kun", lHour:"Soat", lMin:"Daqiqa", lSec:"Soniya",
+  hadith:"Nikoh mening sunnatimdir. Kim mening sunnatimga amal qilsa, u mendan.",
+  hadithCap:"Hadisi sharif",
+  familyLbl:"Hurmat va ehtirom ila",
+  locLbl:"Manzil", routeBtn:"Xaritada ochish",
+  contactsTitle:"Ma'lumot uchun",
+  lTg:"Telegram", lPh:"Telefon", lIg:"Instagram",
+  toyonaTitle:"To'yona",
+  toyonaText:"Qalbingizdagi to'yona atamoqchi bo'lsangiz, quyidagi karta raqamidan foydalanishingiz mumkin",
+  copyBtn:"Raqamni nusxalash",
+  closing:"Tashrifingizni kutib qolamiz!",
+  credit:"Muhabbat bilan yaratildi",
+};
+
+/* ============================================================================
+   Дальше менять не нужно
+   ============================================================================ */
+document.querySelectorAll("[data-cfg]").forEach(el=>{const v=CONFIG[el.dataset.cfg];if(v!==undefined)el.textContent=v;});
+document.title = CONFIG.groom+" & "+CONFIG.bride+" — To'y taklifnomasi";
+
+/* ---- генератор цветов (оригинальные SVG) ---- */
+function blossom(cx,cy,r,hue){
+  const petals=[0,72,144,216,288].map(a=>{
+    const rad=a*Math.PI/180, px=cx+Math.cos(rad)*r*.62, py=cy+Math.sin(rad)*r*.62;
+    return `<ellipse cx="${px.toFixed(1)}" cy="${py.toFixed(1)}" rx="${(r*.42).toFixed(1)}" ry="${(r*.66).toFixed(1)}" transform="rotate(${a+90} ${px.toFixed(1)} ${py.toFixed(1)})" fill="${hue}"/>`;
+  }).join("");
+  return `<g>${petals}<circle cx="${cx}" cy="${cy}" r="${(r*.34).toFixed(1)}" fill="#E6B25F"/></g>`;
+}
+function leaf(cx,cy,len,ang,col){
+  const rad=ang*Math.PI/180,ex=cx+Math.cos(rad)*len,ey=cy+Math.sin(rad)*len,nx=-Math.sin(rad),ny=Math.cos(rad),w=len*.34;
+  return `<path d="M${cx.toFixed(1)} ${cy.toFixed(1)} Q${(cx+(ex-cx)/2+nx*w).toFixed(1)} ${(cy+(ey-cy)/2+ny*w).toFixed(1)} ${ex.toFixed(1)} ${ey.toFixed(1)} Q${(cx+(ex-cx)/2-nx*w).toFixed(1)} ${(cy+(ey-cy)/2-ny*w).toFixed(1)} ${cx.toFixed(1)} ${cy.toFixed(1)} Z" fill="${col}"/>`;
+}
+const PINK=["#F4C9D2","#EFB7C6","#F6D6DE"], GREEN=["#A9C18E","#8FAE78","#BBD0A2"];
+function rnd(a){return a[Math.floor(Math.random()*a.length)];}
+
+function makeWreath(){
+  const S=400,c=S/2,R=S*.36;let g="";
+  for(let i=0;i<26;i++){const a=i/26*360,rad=a*Math.PI/180,x=c+Math.cos(rad)*R,y=c+Math.sin(rad)*R;
+    g+=leaf(x,y,26+Math.random()*10,a+90+(Math.random()*30-15),rnd(GREEN));
+    g+=leaf(x,y,22+Math.random()*8,a-90+(Math.random()*30-15),rnd(GREEN));}
+  for(let i=0;i<11;i++){const a=i/11*360+8,rad=a*Math.PI/180,x=c+Math.cos(rad)*R,y=c+Math.sin(rad)*R;
+    g+=blossom(x,y,15+Math.random()*7,rnd(PINK));}
+  return `<svg viewBox="0 0 ${S} ${S}" xmlns="http://www.w3.org/2000/svg" style="width:100%;height:auto">${g}</svg>`;
+}
+function makeCorner(){
+  let g="";const pts=[[26,26],[60,20],[20,60],[64,58],[40,42]];
+  pts.forEach(p=>{g+=leaf(p[0],p[1],22+Math.random()*10,Math.random()*360,rnd(GREEN));});
+  [[30,30,14],[58,26,11],[26,58,11],[50,52,13]].forEach(b=>g+=blossom(b[0],b[1],b[2],rnd(PINK)));
+  return `<svg viewBox="0 0 90 90" xmlns="http://www.w3.org/2000/svg" style="width:100%;height:100%">${g}</svg>`;
+}
+function makeSpray(w){
+  const W=240,H=80,cy=H/2;let g="";
+  for(let i=0;i<10;i++){const x=W/2+(i-5)*22;g+=leaf(x,cy,20+Math.random()*12,(i<5?160:20)+(Math.random()*40-20),rnd(GREEN));}
+  for(let i=0;i<7;i++){const x=W/2+(i-3)*30;g+=blossom(x,cy+(Math.random()*10-5),12+Math.random()*6,rnd(PINK));}
+  return `<svg viewBox="0 0 ${W} ${H}" xmlns="http://www.w3.org/2000/svg" style="width:100%;height:auto">${g}</svg>`;
+}
+function makeBottom(){
+  const W=300,H=130;let g="";
+  for(let i=0;i<16;i++){const x=W/2+(Math.random()*220-110),y=H-20-Math.random()*70;g+=leaf(x,y,24+Math.random()*16,Math.random()*360,rnd(GREEN));}
+  for(let i=0;i<12;i++){const x=W/2+(Math.random()*200-100),y=H-24-Math.random()*60;g+=blossom(x,y,13+Math.random()*8,rnd(PINK));}
+  return `<svg viewBox="0 0 ${W} ${H}" xmlns="http://www.w3.org/2000/svg" style="width:100%;height:auto">${g}</svg>`;
+}
+function fill(sel,img,maker){
+  document.querySelectorAll(sel).forEach(el=>{ el.innerHTML = img ? `<img src="${img}" alt="">` : maker(); });
+}
+fill('[data-flower="wreath"]',CONFIG.wreathImage,makeWreath);
+fill('[data-flower="corner"]',CONFIG.cornerImage,makeCorner);
+fill('[data-flower="divider"]',CONFIG.dividerImage,()=>makeSpray());
+fill('[data-flower="bottom"]',CONFIG.bottomImage,makeBottom);
+
+/* ---- падающие лепестки ---- */
+(function(){const f=document.getElementById("petals");for(let i=0;i<14;i++){const p=document.createElement("div");p.className="petal";p.style.left=Math.random()*100+"vw";p.style.animationDuration=(9+Math.random()*9)+"s";p.style.animationDelay=(-Math.random()*12)+"s";p.style.transform="scale("+(.6+Math.random()*.9)+")";f.appendChild(p);}})();
+
+/* ---- карта / контакты ---- */
+document.getElementById("map").src=`https://www.google.com/maps?q=${CONFIG.coords.lat},${CONFIG.coords.lng}&z=15&output=embed`;
+document.getElementById("btn-route").href=`https://www.google.com/maps/dir/?api=1&destination=${CONFIG.coords.lat},${CONFIG.coords.lng}`;
+document.getElementById("c-tg").href=CONFIG.telegramUrl;
+document.getElementById("c-ph").href="tel:"+CONFIG.phoneTel;
+document.getElementById("c-ig").href=CONFIG.instagramUrl;
+
+/* ---- отсчёт ---- */
+const target=new Date(CONFIG.datetime).getTime(),pad=n=>String(n).padStart(2,"0");
+function tick(){const diff=target-Date.now();const set=(id,v)=>document.getElementById(id).textContent=v;
+  if(diff<=0){set("cd-d",0);set("cd-h","00");set("cd-m","00");set("cd-s","00");return;}
+  set("cd-d",Math.floor(diff/864e5));set("cd-h",pad(Math.floor(diff%864e5/36e5)));set("cd-m",pad(Math.floor(diff%36e5/6e4)));set("cd-s",pad(Math.floor(diff%6e4/1e3)));}
+tick();setInterval(tick,1000);
+
+/* ---- тост ---- */
+const toast=document.getElementById("toast");let tt;
+function showToast(msg){toast.textContent=msg;toast.classList.add("show");clearTimeout(tt);tt=setTimeout(()=>toast.classList.remove("show"),1800);}
+
+/* ---- копирование номера карты ---- */
+document.getElementById("copyBtn").addEventListener("click",()=>{
+  const num=CONFIG.cardNumber.replace(/\s/g,"");
+  const done=()=>showToast("Nusxalandi ✓");
+  if(navigator.clipboard){navigator.clipboard.writeText(num).then(done).catch(()=>{fallback(num);done();});}
+  else{fallback(num);done();}
+});
+function fallback(t){const ta=document.createElement("textarea");ta.value=t;document.body.appendChild(ta);ta.select();try{document.execCommand("copy");}catch(_){}ta.remove();}
+
+/* ---- плеер ---- */
+const audio=document.getElementById("audio"),player=document.getElementById("player");
+if(CONFIG.music){audio.src=CONFIG.music;}
+player.addEventListener("click",()=>{
+  if(!CONFIG.music)return;
+  if(audio.paused){audio.play().then(()=>player.classList.add("spin")).catch(()=>{});}
+  else{audio.pause();player.classList.remove("spin");}
+});
+
+/* ---- эффекты раскрытия ---- */
+let io;
+function observe(){
+  if(!io)io=new IntersectionObserver(es=>es.forEach(e=>{if(e.isIntersecting){e.target.classList.add("in");io.unobserve(e.target);}}),{threshold:.16,rootMargin:"0px 0px -8% 0px"});
+  document.querySelectorAll(".reveal:not(.in),.reveal-zoom:not(.in)").forEach(el=>io.observe(el));
+}
+
+/* ---- открытие обложки ---- */
+let opened=false;
+function openInvite(){
+  if(opened)return;opened=true;
+  if(CONFIG.music){audio.play().then(()=>player.classList.add("spin")).catch(()=>{});player.style.display="flex";}
+  document.getElementById("cover").classList.add("gone");
+  document.body.classList.remove("locked");
+  setTimeout(()=>{document.getElementById("cover").style.display="none";},1150);
+  observe();
+  if(!matchMedia("(prefers-reduced-motion: reduce)").matches){
+    const s=document.createElement("script");s.src="https://cdn.jsdelivr.net/npm/lenis@1.1.14/dist/lenis.min.js";
+    s.onload=()=>{try{const l=new Lenis({lerp:.085});(function raf(t){l.raf(t);requestAnimationFrame(raf);})();}catch(_){}};
+    document.head.appendChild(s);
+  }
+}
+document.getElementById("openBtn").addEventListener("click",openInvite);
+</script>
+</body>
+</html>
