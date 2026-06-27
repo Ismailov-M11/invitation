@@ -39,7 +39,6 @@ body{
 }
 body.locked{height:100vh;overflow:hidden;background:#1b1510}
 body.locked .phone{width:100vw;background:#1b1510;box-shadow:none;overflow:visible}
-body.locked .phone:before,body.locked .phone:after{display:none}
 a{color:inherit;text-decoration:none}
 button{font:inherit}
 img{display:block;max-width:100%}
@@ -54,18 +53,7 @@ img{display:block;max-width:100%}
     var(--paper);
   box-shadow:0 0 38px rgba(95,74,44,.14);
 }
-.phone:before,.phone:after{
-  content:"";
-  position:absolute;
-  top:0;
-  bottom:0;
-  width:1px;
-  background:linear-gradient(180deg,transparent,var(--line),transparent);
-  z-index:4;
-  pointer-events:none;
-}
-.phone:before{left:0}
-.phone:after{right:0}
+.phone:before,.phone:after{display:none}
 .section{
   position:relative;
   z-index:1;
@@ -208,7 +196,7 @@ img{display:block;max-width:100%}
   overflow:hidden;
   background:#1b1510;
 }
-body.locked .intro-poster{
+.intro-poster{
   width:100vw;
   margin-left:calc((100vw - 100%) / -2);
 }
@@ -926,17 +914,23 @@ function showToast(text){
 const audio=document.getElementById("audio");
 const musicBtn=document.getElementById("musicBtn");
 if(CONFIG.music) audio.src=CONFIG.music;
-// show first frame — explicit load() triggers iOS preload
+// iOS ignores preload="auto" until a user gesture — warm on first touch
 (()=>{
   const vid=document.getElementById("introVid");
   if(!vid)return;
   const showFirst=()=>{try{vid.currentTime=0.01;}catch(e){}};
+  // try non-gesture load (works on desktop/Android)
   vid.load();
   if(vid.readyState>=2) showFirst();
   else{
     vid.addEventListener("loadeddata",showFirst,{once:true});
     vid.addEventListener("canplay",showFirst,{once:true});
   }
+  // first touch = trigger iOS to actually start downloading
+  const warmUp=()=>{
+    if(vid.readyState<1){vid.load();}
+  };
+  document.addEventListener("touchstart",warmUp,{once:true,passive:true});
 })();
 musicBtn.addEventListener("click",()=>{
   if(!CONFIG.music) return showToast("Musiqa ulanmagan");
@@ -1001,11 +995,16 @@ document.getElementById("openBtn").addEventListener("click",()=>{
     musicBtn.style.display="flex";
     audio.play().then(()=>musicBtn.classList.add("spin")).catch(()=>{});
   }
-  // play video from frame 0 — user gesture context makes this reliable on all browsers
+  // play video — in user gesture context (reliable on iOS/Android)
   if(vid){
     vid.currentTime=0;
     vid.play().catch(()=>{});
     vid.addEventListener("ended",()=>{vid.pause();},{once:true});
+    // if video stalls mid-play, try to resume
+    vid.addEventListener("waiting",()=>{
+      // briefly pause/play to coax the buffer on some mobile browsers
+      vid.play().catch(()=>{});
+    });
   }
   // typewriter after cover fades
   setTimeout(()=>{
