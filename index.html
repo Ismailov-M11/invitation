@@ -26,7 +26,7 @@
   --w:min(100vw,548px);
 }
 *{box-sizing:border-box}
-html{scroll-behavior:smooth;-webkit-font-smoothing:antialiased}
+html{scroll-behavior:smooth;-webkit-font-smoothing:antialiased;overscroll-behavior:none}
 body{
   margin:0;
   color:var(--ink);
@@ -192,17 +192,16 @@ img{display:block;max-width:100%}
 .intro-poster{
   position:relative;
   height:100vh;
-  height:100dvh;
+  height:100svh;
   overflow:hidden;
   background:#1b1510;
-  -webkit-transform:translateZ(0);
-  transform:translateZ(0);
-}
-.intro-poster{
   width:100vw;
   margin-left:calc((100vw - 100%) / -2);
+  /* iOS WebKit: prevents overflow:hidden compositing boundary artifacts */
+  -webkit-mask-image:-webkit-radial-gradient(white,black);
+  isolation:isolate;
 }
-.intro-poster video{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;object-position:center center;display:block;-webkit-backface-visibility:hidden;backface-visibility:hidden}
+.intro-poster video{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;object-position:center center;display:block}
 .intro-poster:after{
   content:"";
   position:absolute;
@@ -920,6 +919,10 @@ if(CONFIG.music) audio.src=CONFIG.music;
   else{
     vid.addEventListener("loadeddata",showFirst,{once:true});
     vid.addEventListener("canplay",showFirst,{once:true});
+  }
+  // Fallback for Safari < 15.4 that doesn't support svh
+  if(!CSS.supports('height','100svh')){
+    vid.closest('.intro-poster').style.height=window.innerHeight+'px';
   }
   // Background-download full video as blob (ready before user taps)
   window._vidBlobUrl=null;
