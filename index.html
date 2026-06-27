@@ -72,7 +72,7 @@ img{display:block;max-width:100%}
 }
 .small-caps{
   font-family:var(--sans);
-  font-size:13px;
+  font-size:15px;
   letter-spacing:.28em;
   text-transform:uppercase;
   color:var(--muted);
@@ -88,7 +88,7 @@ img{display:block;max-width:100%}
   max-width:330px;
   margin:12px auto 0;
   color:#8b7c67;
-  font-size:19px;
+  font-size:21px;
   line-height:1.65;
   font-style:italic;
 }
@@ -298,7 +298,7 @@ img{display:block;max-width:100%}
   font-family:var(--sans);
   letter-spacing:.24em;
   text-transform:uppercase;
-  font-size:12px;
+  font-size:14px;
   color:var(--muted);
 }
 .frame-block{
@@ -356,14 +356,14 @@ img{display:block;max-width:100%}
   margin-bottom:14px;
   color:#9a8067;
 }
-.calendar-head .month{font-size:25px;font-style:italic;color:#8c745d}
-.calendar-head .year{font-family:var(--sans);font-size:14px;letter-spacing:.18em}
+.calendar-head .month{font-size:27px;font-style:italic;color:#8c745d}
+.calendar-head .year{font-family:var(--sans);font-size:16px;letter-spacing:.18em}
 .week,.days{
   display:grid;
   grid-template-columns:repeat(7,1fr);
   gap:7px;
   font-family:var(--sans);
-  font-size:12px;
+  font-size:13px;
   color:#a79781;
 }
 .week{margin-bottom:10px;color:#9c8d79;font-weight:500}
@@ -400,7 +400,7 @@ img{display:block;max-width:100%}
   color:#a08f77;
   text-transform:uppercase;
   letter-spacing:.14em;
-  font-size:12px;
+  font-size:14px;
   line-height:1.5;
 }
 .countdown{
@@ -423,7 +423,7 @@ img{display:block;max-width:100%}
   margin-top:6px;
   color:#a79680;
   font-family:var(--sans);
-  font-size:12px;
+  font-size:14px;
   letter-spacing:.22em;
   text-transform:uppercase;
 }
@@ -439,7 +439,7 @@ img{display:block;max-width:100%}
 .address{
   margin:0 auto 14px;
   max-width:310px;
-  font-size:18px;
+  font-size:20px;
   color:#8e806d;
 }
 .map-frame{
@@ -462,7 +462,7 @@ img{display:block;max-width:100%}
   justify-content:center;
   gap:8px;
   font-family:var(--sans);
-  font-size:12px;
+  font-size:14px;
   letter-spacing:.16em;
   text-transform:uppercase;
   cursor:pointer;
@@ -503,7 +503,7 @@ img{display:block;max-width:100%}
   display:block;
   font-family:var(--sans);
   color:#9b8772;
-  font-size:12px;
+  font-size:14px;
   letter-spacing:.18em;
   text-transform:uppercase;
   font-weight:500;
@@ -511,7 +511,7 @@ img{display:block;max-width:100%}
 .contact-row span{
   display:block;
   color:#8a7b68;
-  font-size:17px;
+  font-size:19px;
   line-height:1.2;
 }
 .final{padding-bottom:82px}
@@ -647,9 +647,40 @@ img{display:block;max-width:100%}
   .timebox strong{font-size:25px}
   .music{transform:translateX(calc(50vw - 66px))}
 }
+/* ─── Language switcher ─── */
+.lang-sw{position:fixed;top:12px;right:12px;z-index:160;display:flex;gap:2px;
+  background:rgba(255,251,240,.92);backdrop-filter:blur(10px);border-radius:999px;
+  padding:4px;border:1px solid rgba(154,123,93,.18);box-shadow:0 4px 14px -4px rgba(154,123,93,.22)}
+.lang-btn{font-family:var(--sans);font-size:.68rem;font-weight:700;padding:5px 10px;
+  border:none;border-radius:999px;cursor:pointer;background:transparent;color:var(--muted);
+  transition:.2s;letter-spacing:.03em;line-height:1}
+.lang-btn.active{background:var(--rose-dark);color:#fff}
+.lang-btn:hover:not(.active){background:rgba(158,96,92,.1);color:var(--rose-dark)}
+/* ─── Extended reveals ─── */
+.reveal-l{opacity:0;transform:translateX(-42px);transition:opacity .95s ease,transform .95s cubic-bezier(.2,.7,.2,1)}
+.reveal-r{opacity:0;transform:translateX(42px);transition:opacity .95s ease,transform .95s cubic-bezier(.2,.7,.2,1)}
+.reveal-l.in,.reveal-r.in{opacity:1;transform:none}
+.stag>.reveal:nth-child(1),.stag>.reveal-l:nth-child(1),.stag>.reveal-r:nth-child(1){transition-delay:.07s}
+.stag>.reveal:nth-child(2),.stag>.reveal-l:nth-child(2),.stag>.reveal-r:nth-child(2){transition-delay:.2s}
+.stag>.reveal:nth-child(3),.stag>.reveal-l:nth-child(3),.stag>.reveal-r:nth-child(3){transition-delay:.33s}
+.stag>.reveal:nth-child(4),.stag>.reveal-l:nth-child(4),.stag>.reveal-r:nth-child(4){transition-delay:.46s}
+/* ─── Typewriter & word-fade ─── */
+@keyframes blink{50%{opacity:0}}
+.tw-cur::after{content:"|";font-weight:300;animation:blink .65s step-end infinite}
+@keyframes wFade{from{opacity:0;transform:translateY(8px)}to{opacity:1;transform:none}}
+.w-fade>span{display:inline;opacity:0;animation:wFade .55s ease both}
+@media(prefers-reduced-motion:reduce){
+  .reveal,.reveal-l,.reveal-r{opacity:1;transform:none;transition:none}
+  .w-fade>span{opacity:1;animation:none}
+}
 </style>
 </head>
 <body class="locked">
+<div class="lang-sw" id="langSw">
+  <button class="lang-btn active" data-lang="uz">UZ</button>
+  <button class="lang-btn" data-lang="uzc">ЎЗ</button>
+  <button class="lang-btn" data-lang="ru">РУ</button>
+</div>
 <div class="cover" id="cover">
   <div class="cover-inner">
     <div class="cover-depth"><img src="assets/inside.jpg" alt=""></div>
@@ -670,7 +701,7 @@ img{display:block;max-width:100%}
       <div class="cover-names"><span data-cfg="groom">Shahboz</span><span class="amp">&amp;</span><span data-cfg="bride">Husnora</span></div>
       <span class="cover-line"></span>
       <button class="open-btn" id="openBtn" type="button">
-        <span>Taklifnomani ochish</span>
+        <span data-cfg="openBtn">Taklifnomani ochish</span>
         <svg viewBox="0 0 24 24" fill="none" aria-hidden="true"><path d="M5 12h14M13 6l6 6-6 6" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"/></svg>
       </button>
     </div>
@@ -681,10 +712,10 @@ img{display:block;max-width:100%}
   <section class="intro section">
     <div class="intro-poster"><img class="hero-img" src="https://assets.e-invitation.uz/manor-edition/hero.jpg" alt="Ingliz uslubidagi qasr"></div>
     <div class="intro-copy reveal">
-      <div class="small-caps">Assalomu alaykum!</div>
-      <h1>Hurmatli Mehmonimiz,</h1>
-      <p class="lead">muhabbat ila boshlangan yo'limizning eng unutilmas kuniga sizni chorlaymiz</p>
-      <div class="scroll-label">Pastga tushiring</div>
+      <div class="small-caps" data-cfg="hello">Assalomu alaykum!</div>
+      <h1 id="guestH1" data-cfg="dearGuest">Hurmatli Mehmonimiz,</h1>
+      <p class="lead" data-cfg="lead">muhabbat ila boshlangan yo'limizning eng unutilmas kuniga sizni chorlaymiz</p>
+      <div class="scroll-label" data-cfg="scrollHint">Pastga tushiring</div>
     </div>
   </section>
 
@@ -693,7 +724,7 @@ img{display:block;max-width:100%}
       <img src="https://assets.e-invitation.uz/manor-edition/frame.webp" alt="Gulli ramka">
       <div class="frame-text">
         <div class="script names"><span data-cfg="groom">Shahboz</span><span class="amp">&amp;</span><span data-cfg="bride">Husnora</span></div>
-        <p class="soft-text">sizni nikoh to'yi marosimida ishtirok etishga samimiy taklif qiladilar</p>
+        <p class="soft-text" data-cfg="inviteText">sizni nikoh to'yi marosimida ishtirok etishga samimiy taklif qiladilar</p>
       </div>
     </div>
   </section>
@@ -702,73 +733,73 @@ img{display:block;max-width:100%}
     <img class="divider sm reveal" src="https://assets.e-invitation.uz/manor-edition/divider.webp" alt="">
     <img class="art-img reveal" src="https://assets.e-invitation.uz/manor-edition/couple.webp" alt="Bog'da sayr qilayotgan kuyov-kelin">
     <div class="quote-mark reveal">"</div>
-    <p class="soft-text reveal">Ba'zi uchrashuvlar tasodif emas... Qalbimizni birlashtirgan muhabbat bizni eng baxtli kunimiz sari yetakladi. Shu unutilmas onlarimizga sizni ham guvoh bo'lishga chorlaymiz.</p>
+    <p class="soft-text reveal" data-cfg="coupleQuote">Ba'zi uchrashuvlar tasodif emas... Qalbimizni birlashtirgan muhabbat bizni eng baxtli kunimiz sari yetakladi. Shu unutilmas onlarimizga sizni ham guvoh bo'lishga chorlaymiz.</p>
   </section>
 
   <section class="details section">
-    <div class="small-caps reveal">Tafsilotlar</div>
-    <div class="script reveal" style="font-size:34px;margin-top:2px">Sanani eslab qoling</div>
+    <div class="small-caps reveal" data-cfg="detailsLabel">Tafsilotlar</div>
+    <div class="script reveal" style="font-size:34px;margin-top:2px" data-cfg="dateTitle">Sanani eslab qoling</div>
     <div class="calendar-wrap reveal">
       <div class="calendar-head"><span class="month">Avgust</span><span class="year">2026</span></div>
       <div class="week"><span>DU</span><span>SE</span><span>CH</span><span>PA</span><span>JU</span><span>SH</span><span>YA</span></div>
       <div class="days" id="calendarDays"></div>
-      <div class="soft-text" style="font-size:15px;margin-top:12px">Shanba</div>
+      <div class="soft-text" style="font-size:15px;margin-top:12px" data-cfg="dayName">Shanba</div>
     </div>
     <img class="divider reveal" src="https://assets.e-invitation.uz/manor-edition/bouquet.webp" alt="">
     <div class="event-card reveal">
       <svg viewBox="0 0 24 24" fill="none" aria-hidden="true"><path d="M12 7v5l3 2M5 12a7 7 0 1 0 14 0 7 7 0 0 0-14 0Z" stroke="currentColor" stroke-width="1.4" stroke-linecap="round"/></svg>
       <div class="event-time">18:00</div>
-      <div class="event-caption">Kechki bazm</div>
+      <div class="event-caption" data-cfg="eventCaption">Kechki bazm</div>
     </div>
     <img class="divider reveal" src="https://assets.e-invitation.uz/manor-edition/rings.webp" alt="">
-    <div class="small-caps reveal">Kunlar sanalmoqda</div>
-    <div class="countdown reveal" aria-label="To'ygacha qolgan vaqt">
-      <div class="timebox"><strong id="cd-d">0</strong><span>Kun</span></div>
-      <div class="timebox"><strong id="cd-h">00</strong><span>Soat</span></div>
-      <div class="timebox"><strong id="cd-m">00</strong><span>Daqiqa</span></div>
-      <div class="timebox"><strong id="cd-s">00</strong><span>Soniya</span></div>
+    <div class="small-caps reveal" data-cfg="cdTitle">Kunlar sanalmoqda</div>
+    <div class="countdown reveal stag" aria-label="To'ygacha qolgan vaqt">
+      <div class="timebox reveal"><strong id="cd-d">0</strong><span data-cfg="lDay">Kun</span></div>
+      <div class="timebox reveal"><strong id="cd-h">00</strong><span data-cfg="lHour">Soat</span></div>
+      <div class="timebox reveal"><strong id="cd-m">00</strong><span data-cfg="lMin">Daqiqa</span></div>
+      <div class="timebox reveal"><strong id="cd-s">00</strong><span data-cfg="lSec">Soniya</span></div>
     </div>
   </section>
 
   <section class="venue section">
     <img class="divider sm reveal" src="https://assets.e-invitation.uz/manor-edition/divider.webp" alt="">
-    <div class="small-caps reveal">Marosim</div>
-    <div class="script reveal" style="font-size:35px">To'yxona manzili</div>
+    <div class="small-caps reveal" data-cfg="venueLabel">Marosim</div>
+    <div class="script reveal" style="font-size:35px" data-cfg="venueTitle">To'yxona manzili</div>
     <img class="art-img reveal" src="https://assets.e-invitation.uz/manor-edition/chapel.webp" alt="To'yxona tasviri">
     <h2 class="venue-name reveal" data-cfg="venue">Sher to'yxonasi</h2>
     <p class="address reveal" data-cfg="address">Toshkent viloyati, Chinoz tumani</p>
     <div class="map-frame reveal"><iframe id="map" loading="lazy" referrerpolicy="no-referrer-when-downgrade" title="Map"></iframe></div>
     <a class="outline-btn reveal" id="routeBtn" target="_blank" rel="noopener">
       <svg viewBox="0 0 24 24" fill="none" aria-hidden="true"><path d="M9 18 21 3l-6 18-4-7-7-4 18-7" stroke="currentColor" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round"/></svg>
-      <span>Xaritada ochish</span>
+      <span data-cfg="routeBtnTxt">Xaritada ochish</span>
     </a>
   </section>
 
   <section class="wish section">
     <img class="art-img reveal" src="https://assets.e-invitation.uz/manor-edition/doves.gif?v=20260612" alt="">
     <div class="quote-mark reveal">"</div>
-    <p class="soft-text reveal">Umrimizning eng yorqin kuniga siz ham guvoh bo'lishingizni istaymiz. Quvonchimiz siz bilan bo'lsa, u yanada to'kis bo'ladi.</p>
+    <p class="soft-text reveal" data-cfg="wishText">Umrimizning eng yorqin kuniga siz ham guvoh bo'lishingizni istaymiz. Quvonchimiz siz bilan bo'lsa, u yanada to'kis bo'ladi.</p>
   </section>
 
 
   <section class="section">
-    <div class="small-caps reveal">Bog'lanish</div>
-    <div class="script reveal" style="font-size:35px">Ma'lumot uchun</div>
-    <div class="contacts">
-      <a class="contact-row reveal" id="tgLink" target="_blank" rel="noopener"><span class="icon"><svg viewBox="0 0 24 24" fill="none"><path d="m21 4-3 16-6-5-4 4 1-6-6-3 18-6Z" stroke="currentColor" stroke-width="1.5" stroke-linejoin="round"/></svg></span><span><b>Telegram</b><span data-cfg="telegram">@username</span></span></a>
-      <a class="contact-row reveal" id="phoneLink"><span class="icon"><svg viewBox="0 0 24 24" fill="none"><path d="M6 5c1 6 7 12 13 13l2-4-5-3-2 2c-2-1-4-3-5-5l2-2-3-5-4 2Z" stroke="currentColor" stroke-width="1.5" stroke-linejoin="round"/></svg></span><span><b>Telefon</b><span data-cfg="phone">+998 90 123 45 67</span></span></a>
-      <a class="contact-row reveal" id="waLink" target="_blank" rel="noopener"><span class="icon"><svg viewBox="0 0 24 24" fill="none"><path d="M5 19l1-4a8 8 0 1 1 3 3l-4 1Z" stroke="currentColor" stroke-width="1.5"/><path d="M9 9c1 3 3 5 6 6" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/></svg></span><span><b>Whatsapp</b><span data-cfg="phone">+998 90 123 45 67</span></span></a>
-      <a class="contact-row reveal" id="igLink" target="_blank" rel="noopener"><span class="icon"><svg viewBox="0 0 24 24" fill="none"><path d="M7 3h10a4 4 0 0 1 4 4v10a4 4 0 0 1-4 4H7a4 4 0 0 1-4-4V7a4 4 0 0 1 4-4Z" stroke="currentColor" stroke-width="1.5"/><path d="M9 12a3 3 0 1 0 6 0 3 3 0 0 0-6 0ZM17.5 6.5h.01" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/></svg></span><span><b>Instagram</b><span data-cfg="instagram">@username</span></span></a>
+    <div class="small-caps reveal" data-cfg="contactsLabel">Bog'lanish</div>
+    <div class="script reveal" style="font-size:35px" data-cfg="contactsTitle">Ma'lumot uchun</div>
+    <div class="contacts stag">
+      <a class="contact-row reveal" id="tgLink" target="_blank" rel="noopener"><span class="icon"><svg viewBox="0 0 24 24" fill="none"><path d="m21 4-3 16-6-5-4 4 1-6-6-3 18-6Z" stroke="currentColor" stroke-width="1.5" stroke-linejoin="round"/></svg></span><span><b data-cfg="lTg">Telegram</b><span data-cfg="telegram">@username</span></span></a>
+      <a class="contact-row reveal" id="phoneLink"><span class="icon"><svg viewBox="0 0 24 24" fill="none"><path d="M6 5c1 6 7 12 13 13l2-4-5-3-2 2c-2-1-4-3-5-5l2-2-3-5-4 2Z" stroke="currentColor" stroke-width="1.5" stroke-linejoin="round"/></svg></span><span><b data-cfg="lPh">Telefon</b><span data-cfg="phone">+998 90 123 45 67</span></span></a>
+      <a class="contact-row reveal" id="waLink" target="_blank" rel="noopener"><span class="icon"><svg viewBox="0 0 24 24" fill="none"><path d="M5 19l1-4a8 8 0 1 1 3 3l-4 1Z" stroke="currentColor" stroke-width="1.5"/><path d="M9 9c1 3 3 5 6 6" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/></svg></span><span><b data-cfg="lWa">Whatsapp</b><span data-cfg="phone">+998 90 123 45 67</span></span></a>
+      <a class="contact-row reveal" id="igLink" target="_blank" rel="noopener"><span class="icon"><svg viewBox="0 0 24 24" fill="none"><path d="M7 3h10a4 4 0 0 1 4 4v10a4 4 0 0 1-4 4H7a4 4 0 0 1-4-4V7a4 4 0 0 1 4-4Z" stroke="currentColor" stroke-width="1.5"/><path d="M9 12a3 3 0 1 0 6 0 3 3 0 0 0-6 0ZM17.5 6.5h.01" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/></svg></span><span><b data-cfg="lIg">Instagram</b><span data-cfg="instagram">@username</span></span></a>
     </div>
   </section>
 
   <section class="final section">
     <img class="art-img reveal" src="https://assets.e-invitation.uz/manor-edition/wreath.webp" alt="">
-    <div class="small-caps reveal">Hurmat va ehtirom ila</div>
+    <div class="small-caps reveal" data-cfg="familyLbl">Hurmat va ehtirom ila</div>
     <div class="script final-name reveal">Shahboz va Husnora oilasi</div>
-    <div class="small-caps reveal">Chin qalbimizdan</div>
-    <div class="script reveal" style="font-size:40px;margin-top:4px">Tashrifingizni<br>kutib qolamiz</div>
-    <div class="credit reveal">e · invitation</div>
+    <div class="small-caps reveal" data-cfg="fromHeart">Chin qalbimizdan</div>
+    <div class="script reveal" id="closingEl" style="font-size:40px;margin-top:4px">Tashrifingizni<br>kutib qolamiz</div>
+    <div class="credit reveal" data-cfg="credit">e · invitation</div>
   </section>
 </main>
 
@@ -782,8 +813,8 @@ img{display:block;max-width:100%}
 const CONFIG={
   groom:"Shahboz",
   bride:"Husnora",
-  datetime:"2026-08-15T18:00:00+05:00",
-  day:15,
+  datetime:"2026-08-08T18:00:00+05:00",
+  day:8,
   monthIndex:7,
   year:2026,
   venue:"Sher to'yxonasi",
@@ -795,10 +826,120 @@ const CONFIG={
   phoneTel:"+998901234567",
   instagram:"@username",
   instagramUrl:"https://instagram.com/username",
-
-  music:""
+  music:"music/song.mp3"
 };
+/* ── translations ── */
+const LANGS={
+uz:{
+  hello:"Assalomu alaykum!",dearGuest:"Hurmatli Mehmonimiz,",
+  lead:"muhabbat ila boshlangan yo'limizning eng unutilmas kuniga sizni chorlaymiz",
+  scrollHint:"Pastga tushiring",openBtn:"Taklifnomani ochish",
+  inviteText:"sizni nikoh to'yi marosimida ishtirok etishga samimiy taklif qiladilar",
+  coupleQuote:"Ba'zi uchrashuvlar tasodif emas... Qalbimizni birlashtirgan muhabbat bizni eng baxtli kunimiz sari yetakladi. Shu unutilmas onlarimizga sizni ham guvoh bo'lishga chorlaymiz.",
+  detailsLabel:"Tafsilotlar",dateTitle:"Sanani eslab qoling",dayName:"Shanba",
+  eventCaption:"Kechki bazm",cdTitle:"Kunlar sanalmoqda",
+  lDay:"Kun",lHour:"Soat",lMin:"Daqiqa",lSec:"Soniya",
+  venueLabel:"Marosim",venueTitle:"To'yxona manzili",routeBtnTxt:"Xaritada ochish",
+  contactsLabel:"Bog'lanish",contactsTitle:"Ma'lumot uchun",
+  lTg:"Telegram",lPh:"Telefon",lWa:"Whatsapp",lIg:"Instagram",
+  wishText:"Umrimizning eng yorqin kuniga siz ham guvoh bo'lishingizni istaymiz. Quvonchimiz siz bilan bo'lsa, u yanada to'kis bo'ladi.",
+  familyLbl:"Hurmat va ehtirom ila",fromHeart:"Chin qalbimizdan",
+  closingHtml:"Tashrifingizni<br>kutib qolamiz",credit:"e · invitation",
+  guestPfx:"Hurmatli ",guestNameKey:"uz",
+},
+uzc:{
+  hello:"Ассалому алайкум!",dearGuest:"Ҳурматли Меҳмонимиз,",
+  lead:"муҳаббат ила бошланган йўлимизнинг энг унутилмас кунига сизни чорлаймиз",
+  scrollHint:"Пастга туширинг",openBtn:"Таклифномани очиш",
+  inviteText:"сизни никоҳ тўйи маросимида иштирок этишга самимий таклиф қиладилар",
+  coupleQuote:"Баъзи учрашувлар тасодиф эмас... Қалбимизни бирлаштирган муҳаббат бизни энг бахтли кунимиз сари йўллади. Шу унутилмас онларимизга сизни ҳам гувоҳ бўлишга чорлаймиз.",
+  detailsLabel:"Тафсилотлар",dateTitle:"Санани эслаб қолинг",dayName:"Шанба",
+  eventCaption:"Кечки базм",cdTitle:"Кунлар саналмоқда",
+  lDay:"Кун",lHour:"Соат",lMin:"Дақиқа",lSec:"Сония",
+  venueLabel:"Маросим",venueTitle:"Тўйхона манзили",routeBtnTxt:"Харитада очиш",
+  contactsLabel:"Боғланиш",contactsTitle:"Маълумот учун",
+  lTg:"Telegram",lPh:"Телефон",lWa:"Whatsapp",lIg:"Instagram",
+  wishText:"Умримизнинг энг ёрқин кунига сиз ҳам гувоҳ бўлишингизни истаймиз. Қувончимиз сиз билан бўлса, у янада тўкис бўлади.",
+  familyLbl:"Ҳурмат ва эҳтиром ила",fromHeart:"Чин қалбимиздан",
+  closingHtml:"Ташрифингизни<br>кутиб қоламиз",credit:"e · invitation",
+  guestPfx:"Ҳурматли ",guestNameKey:"ru",
+},
+ru:{
+  hello:"Ассаламу алейкум!",dearGuest:"Уважаемый гость,",
+  lead:"приглашают вас разделить незабываемый день нашей жизни, рождённой из любви",
+  scrollHint:"Листайте вниз",openBtn:"Открыть приглашение",
+  inviteText:"искренне приглашают вас на церемонию бракосочетания",
+  coupleQuote:"Некоторые встречи — не случайность... Любовь, объединившая наши сердца, привела нас к счастливейшему дню. Мы приглашаем вас стать свидетелем этих незабываемых мгновений.",
+  detailsLabel:"Детали",dateTitle:"Запомните дату",dayName:"Суббота",
+  eventCaption:"Вечерний банкет",cdTitle:"До свадьбы осталось",
+  lDay:"Дней",lHour:"Часов",lMin:"Минут",lSec:"Секунд",
+  venueLabel:"Место",venueTitle:"Адрес торжества",routeBtnTxt:"Открыть на карте",
+  contactsLabel:"Контакты",contactsTitle:"Для справки",
+  lTg:"Telegram",lPh:"Телефон",lWa:"Whatsapp",lIg:"Instagram",
+  wishText:"Мы хотим, чтобы вы стали свидетелем самого яркого дня нашей жизни. Ваше присутствие сделает нашу радость вдвойне полной.",
+  familyLbl:"С уважением и теплом",fromHeart:"От чистого сердца",
+  closingHtml:"Ждём вас<br>с нетерпением",credit:"e · invitation",
+  guestPfx:"Уважаемый(-ая) ",guestNameKey:"ru",
+}};
+const TRANS_KEYS=["hello","dearGuest","lead","scrollHint","openBtn","inviteText","coupleQuote",
+  "detailsLabel","dateTitle","dayName","eventCaption","cdTitle","lDay","lHour","lMin","lSec",
+  "venueLabel","venueTitle","routeBtnTxt","contactsLabel","contactsTitle",
+  "lTg","lPh","lWa","lIg","wishText","familyLbl","fromHeart","credit"];
+/* ── guest decode ── */
+const KEY="w3dding_sh4hb0z_husn0r4_2026";
+function xorDecode(token){
+  try{
+    const pad=token+"===".slice(0,(4-token.length%4)%4);
+    const raw=atob(pad.replace(/-/g,"+").replace(/_/g,"/"));
+    const bytes=new Uint8Array(raw.length);
+    for(let i=0;i<raw.length;i++)bytes[i]=raw.charCodeAt(i);
+    const keyB=new TextEncoder().encode(KEY.repeat(Math.ceil(bytes.length/KEY.length))).slice(0,bytes.length);
+    return new TextDecoder("utf-8").decode(bytes.map((b,i)=>b^keyB[i]));
+  }catch(e){return null;}
+}
+let _guestNames=null;
+(function(){
+  const p=new URLSearchParams(location.search);
+  const g=p.get("g");
+  if(g){const d=xorDecode(g);if(d){const pts=d.split("|",2);if(pts[0])_guestNames={uz:pts[0],ru:pts[1]||pts[0]};}}
+})();
+/* ── setLang ── */
+function setLang(lang){
+  const t=LANGS[lang];if(!t)return;
+  window._currentLang=lang;
+  try{localStorage.setItem("inv_lang",lang);}catch(_){}
+  // update buttons
+  document.querySelectorAll(".lang-btn").forEach(b=>{b.classList.toggle("active",b.dataset.lang===lang);});
+  // update all translation keys
+  TRANS_KEYS.forEach(k=>{
+    if(t[k]!==undefined)
+      document.querySelectorAll('[data-cfg="'+k+'"]').forEach(el=>el.textContent=t[k]);
+  });
+  // closing uses innerHTML (has <br>)
+  const cl=document.getElementById("closingEl");
+  if(cl)cl.innerHTML=t.closingHtml;
+  // personalized guest name
+  if(_guestNames){
+    const name=t.guestNameKey==="ru"?(_guestNames.ru||_guestNames.uz):_guestNames.uz;
+    const h1=document.getElementById("guestH1");
+    if(h1)h1.textContent=t.guestPfx+name+"!";
+  }
+}
+/* ── lang switcher ── */
+document.querySelectorAll(".lang-btn").forEach(b=>{
+  b.addEventListener("click",()=>setLang(b.dataset.lang));
+});
+/* ── initial lang ── */
+(function(){
+  let lang="uz";
+  try{lang=localStorage.getItem("inv_lang")||"uz";}catch(_){}
+  const p=new URLSearchParams(location.search);
+  if(p.get("lang"))lang=p.get("lang");
+  if(!LANGS[lang])lang="uz";
+  setLang(lang);
+})();
 
+/* ── CONFIG static values ── */
 document.querySelectorAll("[data-cfg]").forEach(el=>{
   const value=CONFIG[el.dataset.cfg];
   if(value!==undefined) el.textContent=value;
@@ -853,6 +994,17 @@ musicBtn.addEventListener("click",()=>{
   else {audio.pause();musicBtn.classList.remove("spin");}
 });
 
+/* ── typewriter ── */
+function typewriter(el,text,spd,cb){
+  let i=0;el.textContent="";el.classList.add("tw-cur");
+  const ti=setInterval(()=>{el.textContent+=text[i++];if(i>=text.length){clearInterval(ti);el.classList.remove("tw-cur");if(cb)cb();}},spd||48);
+}
+/* ── word fade ── */
+function wordFade(el){
+  const words=el.textContent.split(" ");
+  el.innerHTML=words.map((w,i)=>`<span style="animation-delay:${(i*.07).toFixed(2)}s">${w} </span>`).join("");
+  el.classList.add("w-fade");
+}
 const observer=new IntersectionObserver(entries=>{
   entries.forEach(entry=>{
     if(entry.isIntersecting){
@@ -860,9 +1012,9 @@ const observer=new IntersectionObserver(entries=>{
       observer.unobserve(entry.target);
     }
   });
-},{threshold:.14,rootMargin:"0px 0px -8% 0px"});
+},{threshold:.13,rootMargin:"0px 0px -8% 0px"});
 function observeReveals(){
-  document.querySelectorAll(".reveal:not(.in)").forEach(el=>observer.observe(el));
+  document.querySelectorAll(".reveal:not(.in),.reveal-l:not(.in),.reveal-r:not(.in)").forEach(el=>observer.observe(el));
 }
 
 let opened=false;
@@ -881,6 +1033,13 @@ document.getElementById("openBtn").addEventListener("click",()=>{
   },1050);
   setTimeout(()=>cover.classList.add("gone"),1950);
   setTimeout(()=>{cover.style.display="none";},3200);
+  // typewriter greeting
+  setTimeout(()=>{
+    const hEl=document.querySelector(".intro .small-caps");
+    const leadEl=document.querySelector(".intro .lead");
+    if(hEl){const txt=hEl.textContent;typewriter(hEl,txt,52);}
+    if(leadEl){setTimeout(()=>wordFade(leadEl),900);}
+  },1200);
 });
 </script>
 </body>
