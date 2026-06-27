@@ -266,7 +266,8 @@ img{display:block;max-width:100%}
   height:430px;
   overflow:hidden;
 }
-.intro-poster .hero-img{height:100%;object-fit:cover;animation:slowHero 16s ease-in-out infinite alternate}
+.intro-poster img.hero-img{height:100%;object-fit:cover;animation:slowHero 16s ease-in-out infinite alternate}
+.intro-poster video{width:100%;height:100%;object-fit:cover;display:block}
 .intro-poster:after{
   content:"";
   position:absolute;
@@ -713,7 +714,9 @@ img{display:block;max-width:100%}
 
 <main class="phone">
   <section class="intro section">
-    <div class="intro-poster"><img class="hero-img" src="https://assets.e-invitation.uz/manor-edition/hero.jpg" alt="Ingliz uslubidagi qasr"></div>
+    <div class="intro-poster">
+      <video id="introVid" src="assets/video.mp4" muted playsinline preload="auto"></video>
+    </div>
     <div class="intro-copy reveal">
       <div class="small-caps" data-cfg="hello">Assalomu alaykum!</div>
       <h1 id="guestH1" data-cfg="dearGuest">Hurmatli Mehmonimiz,</h1>
@@ -734,7 +737,6 @@ img{display:block;max-width:100%}
 
   <section class="couple section">
     <img class="divider sm reveal" src="https://assets.e-invitation.uz/manor-edition/divider.webp" alt="">
-    <img class="art-img reveal" src="https://assets.e-invitation.uz/manor-edition/couple.webp" alt="Bog'da sayr qilayotgan kuyov-kelin">
     <div class="quote-mark reveal">"</div>
     <p class="soft-text reveal" data-cfg="coupleQuote">Ba'zi uchrashuvlar tasodif emas... Qalbimizni birlashtirgan muhabbat bizni eng baxtli kunimiz sari yetakladi. Shu unutilmas onlarimizga sizni ham guvoh bo'lishga chorlaymiz.</p>
   </section>
@@ -768,7 +770,6 @@ img{display:block;max-width:100%}
     <img class="divider sm reveal" src="https://assets.e-invitation.uz/manor-edition/divider.webp" alt="">
     <div class="small-caps reveal" data-cfg="venueLabel">Marosim</div>
     <div class="script tw" style="font-size:35px" data-cfg="venueTitle">To'yxona manzili</div>
-    <img class="art-img reveal" src="https://assets.e-invitation.uz/manor-edition/chapel.webp" alt="To'yxona tasviri">
     <h2 class="venue-name reveal" data-cfg="venue">Sher to'yxonasi</h2>
     <p class="address reveal" data-cfg="address">Toshkent viloyati, Chinoz tumani</p>
     <div class="map-frame reveal"><iframe id="map" loading="lazy" referrerpolicy="no-referrer-when-downgrade" title="Map"></iframe></div>
@@ -779,7 +780,6 @@ img{display:block;max-width:100%}
   </section>
 
   <section class="wish section">
-    <img class="art-img reveal" src="https://assets.e-invitation.uz/manor-edition/doves.gif?v=20260612" alt="">
     <div class="quote-mark reveal">"</div>
     <p class="soft-text reveal" data-cfg="wishText">Umrimizning eng yorqin kuniga siz ham guvoh bo'lishingizni istaymiz. Quvonchimiz siz bilan bo'lsa, u yanada to'kis bo'ladi.</p>
   </section>
@@ -797,7 +797,6 @@ img{display:block;max-width:100%}
   </section>
 
   <section class="final section">
-    <img class="art-img reveal" src="https://assets.e-invitation.uz/manor-edition/wreath.webp" alt="">
     <div class="small-caps reveal" data-cfg="familyLbl">Hurmat va ehtirom ila</div>
     <div class="script final-name tw">Shahboz va Husnora oilasi</div>
     <div class="small-caps reveal" data-cfg="fromHeart">Chin qalbimizdan</div>
@@ -1055,7 +1054,16 @@ document.getElementById("openBtn").addEventListener("click",()=>{
     observeReveals();
   },1050);
   setTimeout(()=>cover.classList.add("gone"),1950);
-  setTimeout(()=>{cover.style.display="none";observeTw();},3200);
+  setTimeout(()=>{
+    cover.style.display="none";
+    observeTw();
+    // start video when gate is fully gone — user sees it from frame 0
+    const vid=document.getElementById("introVid");
+    if(vid){
+      vid.play().catch(()=>{});
+      vid.addEventListener("ended",()=>{vid.pause();},{once:true});
+    }
+  },3200);
   // intro typewriter fires AFTER gate finishes (3200ms)
   setTimeout(()=>{
     const hEl=document.querySelector(".intro .small-caps");
