@@ -115,47 +115,24 @@ img{display:block;max-width:100%}
 .cover{
   position:fixed;
   inset:0;
-  z-index:50;
+  z-index:10;
   display:flex;
   justify-content:center;
-  background:linear-gradient(90deg,#e8ddc7 0,#f7efd9 18%,#f3ead6 50%,#f7efd9 82%,#e8ddc7 100%);
-  perspective:1200px;
-  transition:transform 1.15s cubic-bezier(.72,0,.18,1),opacity 1s ease;
+  transition:opacity 1s ease;
 }
-.cover.gone{transform:translateY(-105%);opacity:0;pointer-events:none}
+.cover.gone{opacity:0;pointer-events:none}
 .cover-inner{
   width:var(--w);
   position:relative;
   min-height:100vh;
   overflow:hidden;
-  background:#211f1b;
-  box-shadow:0 0 35px rgba(95,74,44,.16);
-  transform-style:preserve-3d;
 }
-.cover-depth{
-  position:absolute;
-  inset:0;
-  overflow:hidden;
-  transform:scale(1.02);
-  filter:saturate(.94) contrast(.98);
-  transition:transform 2.45s cubic-bezier(.16,.72,.14,1),filter 2.45s ease;
-}
-.cover-depth video{
-  position:absolute;
-  inset:0;
-  width:100%;
-  height:100%;
-  object-fit:cover;
-  object-position:center top;
-}
-.cover.opening .cover-depth{transform:scale(1.08) translateY(-1%);filter:saturate(1.05) contrast(1.04) brightness(1.06)}
 .cover-shade{
   position:absolute;
   inset:0;
   background:
-    linear-gradient(180deg,rgba(0,0,0,0) 45%,rgba(0,0,0,.72) 100%),
-    radial-gradient(circle at 50% 34%,transparent 20%,rgba(0,0,0,.12) 56%,rgba(0,0,0,.38) 100%);
-  transition:opacity 1.25s ease;
+    linear-gradient(180deg,rgba(0,0,0,0) 40%,rgba(0,0,0,.78) 100%),
+    radial-gradient(circle at 50% 34%,transparent 20%,rgba(0,0,0,.08) 56%,rgba(0,0,0,.28) 100%);
 }
 .cover-content{
   position:absolute;
@@ -165,10 +142,7 @@ img{display:block;max-width:100%}
   padding:0 42px;
   color:#fff7ec;
   text-align:center;
-  transition:opacity .9s ease,transform 1.05s ease,filter 1.05s ease;
 }
-.cover.opening .cover-content{opacity:0;transform:translateY(28px);filter:blur(4px)}
-.cover.opening .cover-shade{opacity:.2}
 .cover-line{
   display:block;
   height:1px;
@@ -233,11 +207,10 @@ img{display:block;max-width:100%}
 }
 .intro-poster{
   position:relative;
-  height:430px;
+  height:100vh;
   overflow:hidden;
 }
-.intro-poster img.hero-img{height:100%;object-fit:cover;animation:slowHero 16s ease-in-out infinite alternate}
-.intro-poster video{width:100%;height:100%;object-fit:cover;display:block}
+.intro-poster video{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;object-position:center top;display:block}
 .intro-poster:after{
   content:"";
   position:absolute;
@@ -657,9 +630,6 @@ img{display:block;max-width:100%}
 </div>
 <div class="cover" id="cover">
   <div class="cover-inner">
-    <div class="cover-depth">
-      <video id="gateVid" src="assets/video.mp4" muted playsinline preload="auto"></video>
-    </div>
     <div class="cover-petals" aria-hidden="true">
       <span style="--x:9%;--s:18px;--d:18s;--dx:120px;--delay:-3s">❀</span>
       <span style="--x:22%;--s:15px;--d:21s;--dx:-80px;--delay:-12s">✿</span>
@@ -958,13 +928,13 @@ function showToast(text){
 const audio=document.getElementById("audio");
 const musicBtn=document.getElementById("musicBtn");
 if(CONFIG.music) audio.src=CONFIG.music;
-// gateVid: show first frame only (no autoplay, no loop)
+// show first frame of video on load
 (()=>{
-  const gv=document.getElementById("gateVid");
-  if(!gv)return;
-  const showFirstFrame=()=>{gv.currentTime=0.01;};
-  if(gv.readyState>=2) showFirstFrame();
-  else gv.addEventListener("loadeddata",showFirstFrame,{once:true});
+  const vid=document.getElementById("introVid");
+  if(!vid)return;
+  const showFirst=()=>{vid.currentTime=0.01;};
+  if(vid.readyState>=2) showFirst();
+  else vid.addEventListener("loadeddata",showFirst,{once:true});
 })();
 musicBtn.addEventListener("click",()=>{
   if(!CONFIG.music) return showToast("Musiqa ulanmagan");
@@ -1016,30 +986,26 @@ document.getElementById("openBtn").addEventListener("click",()=>{
   if(opened) return;
   opened=true;
   const cover=document.getElementById("cover");
-  cover.classList.add("opening");
+  const vid=document.getElementById("introVid");
+  // fade cover out (no slide, just opacity)
+  cover.classList.add("gone");
+  setTimeout(()=>{cover.style.display="none";},1050);
+  // unlock scroll
+  document.body.classList.remove("locked");
+  observeReveals();
+  observeTw();
+  // music
   if(CONFIG.music){
     musicBtn.style.display="flex";
     audio.play().then(()=>musicBtn.classList.add("spin")).catch(()=>{});
   }
-  // prime introVid inside user-gesture stack so mobile browsers allow later play()
-  const introVid=document.getElementById("introVid");
-  if(introVid){introVid.play().then(()=>introVid.pause()).catch(()=>{});}
-  setTimeout(()=>{
-    document.body.classList.remove("locked");
-    observeReveals();
-  },1050);
-  setTimeout(()=>cover.classList.add("gone"),1950);
-  setTimeout(()=>{
-    cover.style.display="none";
-    observeTw();
-    // play intro video from frame 0 after gate is fully gone
-    if(introVid){
-      introVid.currentTime=0;
-      introVid.play().catch(()=>{});
-      introVid.addEventListener("ended",()=>{introVid.pause();},{once:true});
-    }
-  },3200);
-  // intro typewriter fires AFTER gate finishes (3200ms)
+  // play video from frame 0 — user gesture context makes this reliable on all browsers
+  if(vid){
+    vid.currentTime=0;
+    vid.play().catch(()=>{});
+    vid.addEventListener("ended",()=>{vid.pause();},{once:true});
+  }
+  // typewriter after cover fades
   setTimeout(()=>{
     const hEl=document.querySelector(".intro .small-caps");
     const leadEl=document.querySelector(".intro .lead");
@@ -1047,7 +1013,7 @@ document.getElementById("openBtn").addEventListener("click",()=>{
     if(hEl){const txt=hEl.textContent;typewriter(hEl,txt,52);}
     if(leadEl){setTimeout(()=>wordFade(leadEl),900);}
     if(guestH1){setTimeout(()=>{const t=guestH1.textContent;typewriter(guestH1,t,38);},1500);}
-  },3450);
+  },1100);
 });
 </script>
 </body>
