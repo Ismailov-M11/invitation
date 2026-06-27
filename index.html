@@ -1004,7 +1004,27 @@ document.getElementById("openBtn").addEventListener("click",()=>{
       vid.currentTime=0;
     }
     vid.play().catch(()=>{});
-    vid.addEventListener("ended",()=>{vid.pause();},{once:true});
+    vid.addEventListener("ended",()=>{
+      vid.pause();
+      // Replace <video> with <canvas> showing last frame — eliminates iOS WebKit
+      // video GPU compositing layer that causes scroll parallax on paused video
+      try{
+        const p=vid.parentNode;
+        const dpr=window.devicePixelRatio||1;
+        const cw=p.clientWidth, ch=p.clientHeight;
+        const vw=vid.videoWidth||cw, vh=vid.videoHeight||ch;
+        const s=Math.max(cw/vw, ch/vh);
+        const c=document.createElement('canvas');
+        c.width=Math.round(cw*dpr);
+        c.height=Math.round(ch*dpr);
+        c.style.cssText='position:absolute;inset:0;width:100%;height:100%;display:block';
+        const ctx=c.getContext('2d');
+        ctx.scale(dpr,dpr);
+        ctx.drawImage(vid,(cw-vw*s)/2,(ch-vh*s)/2,vw*s,vh*s);
+        p.insertBefore(c,vid);
+        vid.style.display='none';
+      }catch(e){/* drawImage unavailable — keep video visible */}
+    },{once:true});
     // Stall monitor: poll currentTime — more reliable than 'waiting' event on Android Chrome
     let lastT=-1,stallN=0;
     const stallTimer=setInterval(()=>{
