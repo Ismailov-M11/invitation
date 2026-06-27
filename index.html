@@ -96,6 +96,8 @@ img{display:block;max-width:100%}
   width:165px;
   margin:18px auto;
   opacity:.82;
+  animation:sway 6s ease-in-out infinite;
+  transform-origin:center bottom;
 }
 .divider.sm{width:112px;margin-top:8px;margin-bottom:8px}
 .quote-mark{
@@ -104,6 +106,7 @@ img{display:block;max-width:100%}
   line-height:1;
   opacity:.75;
 }
+.quote-mark.in{animation:inkDrop .7s ease both}
 .hero-img,.art-img{
   width:100%;
   height:auto;
@@ -116,6 +119,7 @@ img{display:block;max-width:100%}
   display:flex;
   justify-content:center;
   background:linear-gradient(90deg,#e8ddc7 0,#f7efd9 18%,#f3ead6 50%,#f7efd9 82%,#e8ddc7 100%);
+  perspective:1200px;
   transition:transform 1.15s cubic-bezier(.72,0,.18,1),opacity 1s ease;
 }
 .cover.gone{transform:translateY(-105%);opacity:0;pointer-events:none}
@@ -126,8 +130,21 @@ img{display:block;max-width:100%}
   overflow:hidden;
   background:#211f1b;
   box-shadow:0 0 35px rgba(95,74,44,.16);
+  transform-style:preserve-3d;
 }
-.cover-art{
+.cover-depth,
+.cover-door{
+  position:absolute;
+  inset:0;
+  overflow:hidden;
+}
+.cover-depth{
+  transform:scale(1.02);
+  filter:saturate(.94) contrast(.98);
+  transition:transform 2.45s cubic-bezier(.16,.72,.14,1),filter 2.45s ease;
+}
+.cover-depth img,
+.cover-door:before{
   position:absolute;
   inset:0;
   width:100%;
@@ -135,12 +152,34 @@ img{display:block;max-width:100%}
   object-fit:cover;
   object-position:center top;
 }
+.cover-depth img{animation:kenBurns 14s ease-in-out infinite alternate}
+.cover-door{
+  width:50%;
+  transition:transform 2.05s cubic-bezier(.2,.82,.16,1),filter 2.05s ease,opacity 1.65s ease;
+  transform-style:preserve-3d;
+  will-change:transform;
+}
+.cover-door:before{
+  content:"";
+  background-image:url("https://assets.e-invitation.uz/manor-edition/intro-poster.jpg");
+  background-repeat:no-repeat;
+  background-size:200% 100%;
+  filter:contrast(1.02);
+}
+.cover-door.left{left:0;right:auto;transform-origin:left center}
+.cover-door.left:before{background-position:left top}
+.cover-door.right{left:auto;right:0;transform-origin:right center}
+.cover-door.right:before{background-position:right top}
+.cover.opening .cover-depth{transform:scale(1.24) translateY(-2.5%);filter:saturate(1.05) contrast(1.04) brightness(1.08)}
+.cover.opening .cover-door.left{transform:translateX(-62%) rotateY(-24deg) scale(1.08);filter:brightness(.82) blur(.2px);opacity:.92}
+.cover.opening .cover-door.right{transform:translateX(62%) rotateY(24deg) scale(1.08);filter:brightness(.82) blur(.2px);opacity:.92}
 .cover-shade{
   position:absolute;
   inset:0;
   background:
     linear-gradient(180deg,rgba(0,0,0,0) 45%,rgba(0,0,0,.72) 100%),
     radial-gradient(circle at 50% 34%,transparent 20%,rgba(0,0,0,.12) 56%,rgba(0,0,0,.38) 100%);
+  transition:opacity 1.25s ease;
 }
 .cover-content{
   position:absolute;
@@ -150,7 +189,10 @@ img{display:block;max-width:100%}
   padding:0 42px;
   color:#fff7ec;
   text-align:center;
+  transition:opacity .9s ease,transform 1.05s ease,filter 1.05s ease;
 }
+.cover.opening .cover-content{opacity:0;transform:translateY(28px);filter:blur(4px)}
+.cover.opening .cover-shade{opacity:.2}
 .cover-line{
   display:block;
   height:1px;
@@ -168,6 +210,7 @@ img{display:block;max-width:100%}
   line-height:1;
   color:#fff;
   text-shadow:0 4px 18px rgba(0,0,0,.42);
+  animation:hintRise 1.8s ease both;
 }
 .cover-names .amp{
   font-family:var(--serif);
@@ -191,9 +234,23 @@ img{display:block;max-width:100%}
   letter-spacing:.33em;
   text-transform:uppercase;
   transition:background .25s ease, transform .25s ease;
+  animation:btnBreathe 3s ease-in-out infinite;
 }
 .open-btn:hover{background:rgba(83,72,55,.64);transform:translateY(-1px)}
 .open-btn svg{width:16px;height:16px}
+.cover-petals{position:absolute;inset:0;z-index:2;pointer-events:none;overflow:hidden}
+.cover-petals span{
+  position:absolute;
+  top:-8%;
+  left:var(--x);
+  color:rgba(255,239,217,.58);
+  font-size:var(--s);
+  opacity:.26;
+  text-shadow:0 2px 12px rgba(76,54,33,.3);
+  animation:petalDrift var(--d) linear infinite;
+  animation-delay:var(--delay);
+}
+.cover.opening .cover-petals span{animation-duration:calc(var(--d) * .72)}
 .intro{
   min-height:660px;
   padding:0 0 42px;
@@ -203,6 +260,7 @@ img{display:block;max-width:100%}
   height:430px;
   overflow:hidden;
 }
+.intro-poster .hero-img{height:100%;object-fit:cover;animation:slowHero 16s ease-in-out infinite alternate}
 .intro-poster:after{
   content:"";
   position:absolute;
@@ -276,6 +334,7 @@ img{display:block;max-width:100%}
 }
 .couple{padding-top:24px}
 .couple .art-img{width:78%;margin:0 auto}
+.details .divider:not(.sm){animation:bobDeep 6s ease-in-out infinite}
 .calendar-wrap{
   width:min(80%,330px);
   margin:18px auto 0;
@@ -363,6 +422,7 @@ img{display:block;max-width:100%}
   text-transform:uppercase;
 }
 .venue .art-img{width:78%;margin:8px auto 0}
+.venue .art-img,.toyona .art-img{animation:bob 6s ease-in-out infinite}
 .venue-name{
   margin:16px auto 4px;
   color:#826f5f;
@@ -403,6 +463,7 @@ img{display:block;max-width:100%}
 }
 .outline-btn svg{width:13px;height:13px}
 .wish .art-img{width:52%;margin:0 auto}
+.wish .art-img{animation:doveFloat 5s ease-in-out infinite}
 .toyona .art-img{width:58%;margin:8px auto 0}
 .bank-card{
   width:min(80%,320px);
@@ -477,6 +538,7 @@ img{display:block;max-width:100%}
 }
 .final{padding-bottom:82px}
 .final .art-img{width:76%;margin:0 auto 8px}
+.final .art-img{animation:sway 7s ease-in-out infinite}
 .final-name{
   margin:6px auto 28px;
   max-width:320px;
@@ -532,7 +594,69 @@ img{display:block;max-width:100%}
   transition:opacity .8s ease, transform .8s ease;
 }
 .reveal.in{opacity:1;transform:none}
+.frame-card.reveal,
+.calendar-wrap.reveal,
+.event-card.reveal,
+.countdown.reveal,
+.bank-card.reveal,
+.small-caps.reveal,
+.script.reveal{
+  transform:scale(.94);
+  filter:blur(6px);
+  transition:opacity .85s ease, transform .85s ease, filter .85s ease;
+}
+.frame-card.reveal.in,
+.calendar-wrap.reveal.in,
+.event-card.reveal.in,
+.countdown.reveal.in,
+.bank-card.reveal.in,
+.small-caps.reveal.in,
+.script.reveal.in{
+  transform:scale(1);
+  filter:none;
+}
 @keyframes spin{to{transform:rotate(360deg)}}
+@keyframes kenBurns{
+  from{transform:scale(1.02) translate3d(0,0,0)}
+  to{transform:scale(1.08) translate3d(-1.2%,-.8%,0)}
+}
+@keyframes slowHero{
+  from{transform:scale(1.16) translateY(0)}
+  to{transform:scale(1.24) translateY(3%)}
+}
+@keyframes hintRise{
+  from{opacity:0;transform:translateY(32px)}
+  to{opacity:1;transform:translateY(0)}
+}
+@keyframes btnBreathe{
+  0%,100%{box-shadow:0 0 0 rgba(241,221,180,0);border-color:rgba(241,221,180,.62)}
+  50%{box-shadow:0 0 26px rgba(241,221,180,.24);border-color:rgba(255,241,211,.9)}
+}
+@keyframes petalDrift{
+  0%{transform:translate3d(0,-12vh,0) rotate(0deg);opacity:0}
+  12%{opacity:.38}
+  100%{transform:translate3d(var(--dx),112vh,0) rotate(540deg);opacity:0}
+}
+@keyframes sway{
+  0%,100%{transform:rotate(-1.4deg) translateY(0)}
+  50%{transform:rotate(1.4deg) translateY(-3px)}
+}
+@keyframes bob{
+  0%,100%{transform:translateY(0)}
+  50%{transform:translateY(-8px)}
+}
+@keyframes bobDeep{
+  0%,100%{transform:translateY(0) rotate(-.4deg)}
+  50%{transform:translateY(-10px) rotate(.4deg)}
+}
+@keyframes doveFloat{
+  0%,100%{transform:translateY(0) scale(1)}
+  50%{transform:translateY(-7px) scale(1.03)}
+}
+@keyframes inkDrop{
+  from{opacity:0;transform:scale(1.45);filter:blur(8px)}
+  to{opacity:.75;transform:scale(1);filter:none}
+}
 @media (max-width:430px){
   .section{padding-left:24px;padding-right:24px}
   .cover-content{padding:0 30px;bottom:42px}
@@ -550,7 +674,17 @@ img{display:block;max-width:100%}
 <body class="locked">
 <div class="cover" id="cover">
   <div class="cover-inner">
-    <img class="cover-art" src="https://assets.e-invitation.uz/manor-edition/intro-poster.jpg" alt="">
+    <div class="cover-depth"><img src="https://assets.e-invitation.uz/manor-edition/hero.jpg" alt=""></div>
+    <div class="cover-door left"></div>
+    <div class="cover-door right"></div>
+    <div class="cover-petals" aria-hidden="true">
+      <span style="--x:9%;--s:18px;--d:18s;--dx:120px;--delay:-3s">❀</span>
+      <span style="--x:22%;--s:15px;--d:21s;--dx:-80px;--delay:-12s">✿</span>
+      <span style="--x:38%;--s:17px;--d:24s;--dx:90px;--delay:-7s">❁</span>
+      <span style="--x:56%;--s:14px;--d:20s;--dx:-110px;--delay:-15s">✤</span>
+      <span style="--x:72%;--s:18px;--d:23s;--dx:75px;--delay:-6s">❀</span>
+      <span style="--x:86%;--s:15px;--d:19s;--dx:-95px;--delay:-10s">✿</span>
+    </div>
     <div class="cover-shade"></div>
     <div class="cover-content">
       <span class="cover-line"></span>
@@ -787,14 +921,18 @@ let opened=false;
 document.getElementById("openBtn").addEventListener("click",()=>{
   if(opened) return;
   opened=true;
-  document.getElementById("cover").classList.add("gone");
-  document.body.classList.remove("locked");
+  const cover=document.getElementById("cover");
+  cover.classList.add("opening");
   if(CONFIG.music){
     musicBtn.style.display="flex";
     audio.play().then(()=>musicBtn.classList.add("spin")).catch(()=>{});
   }
-  observeReveals();
-  setTimeout(()=>{document.getElementById("cover").style.display="none";},1150);
+  setTimeout(()=>{
+    document.body.classList.remove("locked");
+    observeReveals();
+  },1050);
+  setTimeout(()=>cover.classList.add("gone"),1950);
+  setTimeout(()=>{cover.style.display="none";},3200);
 });
 </script>
 </body>
