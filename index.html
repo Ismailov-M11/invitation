@@ -669,10 +669,11 @@ img{display:block;max-width:100%}
 /* ─── Typewriter & word-fade ─── */
 @keyframes blink{50%{opacity:0}}
 .tw-cur::after{content:"|";font-weight:300;animation:blink .65s step-end infinite}
+.tw{opacity:0}.tw.tw-done{opacity:1}
 @keyframes wFade{from{opacity:0;transform:translateY(8px)}to{opacity:1;transform:none}}
 .w-fade>span{display:inline;opacity:0;animation:wFade .55s ease both}
 @media(prefers-reduced-motion:reduce){
-  .reveal,.reveal-l,.reveal-r{opacity:1;transform:none;transition:none}
+  .reveal,.reveal-l,.reveal-r,.tw{opacity:1;transform:none;transition:none}
   .w-fade>span{opacity:1;animation:none}
 }
 </style>
@@ -740,7 +741,7 @@ img{display:block;max-width:100%}
 
   <section class="details section">
     <div class="small-caps reveal" data-cfg="detailsLabel">Tafsilotlar</div>
-    <div class="script reveal" style="font-size:34px;margin-top:2px" data-cfg="dateTitle">Sanani eslab qoling</div>
+    <div class="script tw" style="font-size:34px;margin-top:2px" data-cfg="dateTitle">Sanani eslab qoling</div>
     <div class="calendar-wrap reveal">
       <div class="calendar-head"><span class="month">Avgust</span><span class="year">2026</span></div>
       <div class="week"><span>DU</span><span>SE</span><span>CH</span><span>PA</span><span>JU</span><span>SH</span><span>YA</span></div>
@@ -766,7 +767,7 @@ img{display:block;max-width:100%}
   <section class="venue section">
     <img class="divider sm reveal" src="https://assets.e-invitation.uz/manor-edition/divider.webp" alt="">
     <div class="small-caps reveal" data-cfg="venueLabel">Marosim</div>
-    <div class="script reveal" style="font-size:35px" data-cfg="venueTitle">To'yxona manzili</div>
+    <div class="script tw" style="font-size:35px" data-cfg="venueTitle">To'yxona manzili</div>
     <img class="art-img reveal" src="https://assets.e-invitation.uz/manor-edition/chapel.webp" alt="To'yxona tasviri">
     <h2 class="venue-name reveal" data-cfg="venue">Sher to'yxonasi</h2>
     <p class="address reveal" data-cfg="address">Toshkent viloyati, Chinoz tumani</p>
@@ -786,7 +787,7 @@ img{display:block;max-width:100%}
 
   <section class="section">
     <div class="small-caps reveal" data-cfg="contactsLabel">Bog'lanish</div>
-    <div class="script reveal" style="font-size:35px" data-cfg="contactsTitle">Ma'lumot uchun</div>
+    <div class="script tw" style="font-size:35px" data-cfg="contactsTitle">Ma'lumot uchun</div>
     <div class="contacts stag">
       <a class="contact-row reveal" id="tgLink" target="_blank" rel="noopener"><span class="icon"><svg viewBox="0 0 24 24" fill="none"><path d="m21 4-3 16-6-5-4 4 1-6-6-3 18-6Z" stroke="currentColor" stroke-width="1.5" stroke-linejoin="round"/></svg></span><span><b data-cfg="lTg">Telegram</b><span data-cfg="telegram">@username</span></span></a>
       <a class="contact-row reveal" id="phoneLink"><span class="icon"><svg viewBox="0 0 24 24" fill="none"><path d="M6 5c1 6 7 12 13 13l2-4-5-3-2 2c-2-1-4-3-5-5l2-2-3-5-4 2Z" stroke="currentColor" stroke-width="1.5" stroke-linejoin="round"/></svg></span><span><b data-cfg="lPh">Telefon</b><span data-cfg="phone">+998 90 123 45 67</span></span></a>
@@ -798,7 +799,7 @@ img{display:block;max-width:100%}
   <section class="final section">
     <img class="art-img reveal" src="https://assets.e-invitation.uz/manor-edition/wreath.webp" alt="">
     <div class="small-caps reveal" data-cfg="familyLbl">Hurmat va ehtirom ila</div>
-    <div class="script final-name reveal">Shahboz va Husnora oilasi</div>
+    <div class="script final-name tw">Shahboz va Husnora oilasi</div>
     <div class="small-caps reveal" data-cfg="fromHeart">Chin qalbimizdan</div>
     <div class="script reveal" id="closingEl" style="font-size:40px;margin-top:4px">Tashrifingizni<br>kutib qolamiz</div>
     <div class="credit reveal" data-cfg="credit">e · invitation</div>
@@ -929,7 +930,11 @@ function setLang(lang){
 }
 /* ── lang switcher ── */
 document.querySelectorAll(".lang-btn").forEach(b=>{
-  b.addEventListener("click",()=>setLang(b.dataset.lang));
+  b.addEventListener("click",()=>{
+    setLang(b.dataset.lang);
+    // refresh cached tw text for not-yet-typed elements
+    document.querySelectorAll(".tw:not(.tw-done)").forEach(el=>{el.dataset.twText=el.textContent;});
+  });
 });
 /* ── initial lang ── */
 (function(){
@@ -1018,6 +1023,22 @@ const observer=new IntersectionObserver(entries=>{
 function observeReveals(){
   document.querySelectorAll(".reveal:not(.in),.reveal-l:not(.in),.reveal-r:not(.in)").forEach(el=>observer.observe(el));
 }
+/* ── scroll-triggered typewriter ── */
+let twIo;
+function observeTw(){
+  if(!twIo)twIo=new IntersectionObserver(es=>es.forEach(e=>{
+    if(e.isIntersecting&&!e.target.classList.contains("tw-done")){
+      twIo.unobserve(e.target);
+      const el=e.target,txt=el.dataset.twText||el.textContent;
+      el.style.opacity="1";
+      typewriter(el,txt,el.dataset.twSpd||46,()=>el.classList.add("tw-done"));
+    }
+  }),{threshold:.35});
+  document.querySelectorAll(".tw:not(.tw-done)").forEach(el=>{
+    if(!el.dataset.twText)el.dataset.twText=el.textContent;
+    twIo.observe(el);
+  });
+}
 
 let opened=false;
 document.getElementById("openBtn").addEventListener("click",()=>{
@@ -1034,14 +1055,16 @@ document.getElementById("openBtn").addEventListener("click",()=>{
     observeReveals();
   },1050);
   setTimeout(()=>cover.classList.add("gone"),1950);
-  setTimeout(()=>{cover.style.display="none";},3200);
-  // typewriter greeting
+  setTimeout(()=>{cover.style.display="none";observeTw();},3200);
+  // intro typewriter fires AFTER gate finishes (3200ms)
   setTimeout(()=>{
     const hEl=document.querySelector(".intro .small-caps");
     const leadEl=document.querySelector(".intro .lead");
+    const guestH1=document.getElementById("guestH1");
     if(hEl){const txt=hEl.textContent;typewriter(hEl,txt,52);}
     if(leadEl){setTimeout(()=>wordFade(leadEl),900);}
-  },1200);
+    if(guestH1){setTimeout(()=>{const t=guestH1.textContent;typewriter(guestH1,t,38);},1500);}
+  },3450);
 });
 </script>
 </body>
