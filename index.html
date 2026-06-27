@@ -470,34 +470,6 @@ img{display:block;max-width:100%}
 .outline-btn svg{width:13px;height:13px}
 .wish .art-img{width:52%;margin:0 auto}
 .wish .art-img{animation:doveFloat 5s ease-in-out infinite}
-.toyona .art-img{width:58%;margin:8px auto 0}
-.bank-card{
-  width:min(80%,320px);
-  margin:16px auto 12px;
-  padding:18px 18px 16px;
-  border:1px solid var(--line);
-  background:rgba(255,251,240,.66);
-}
-.bank-name{
-  color:#9b7b66;
-  font-size:20px;
-  font-style:italic;
-}
-.card-number{
-  margin-top:6px;
-  color:#7a6a57;
-  font-family:var(--sans);
-  font-size:14px;
-  letter-spacing:.16em;
-}
-.holder{
-  margin-top:12px;
-  font-family:var(--sans);
-  font-size:8px;
-  letter-spacing:.25em;
-  color:#aa9b84;
-  text-transform:uppercase;
-}
 .contacts{
   width:min(82%,340px);
   margin:18px auto 0;
@@ -604,7 +576,7 @@ img{display:block;max-width:100%}
 .calendar-wrap.reveal,
 .event-card.reveal,
 .countdown.reveal,
-.bank-card.reveal,
+
 .small-caps.reveal,
 .script.reveal{
   transform:scale(.94);
@@ -615,7 +587,7 @@ img{display:block;max-width:100%}
 .calendar-wrap.reveal.in,
 .event-card.reveal.in,
 .countdown.reveal.in,
-.bank-card.reveal.in,
+
 .small-caps.reveal.in,
 .script.reveal.in{
   transform:scale(1);
@@ -778,21 +750,6 @@ img{display:block;max-width:100%}
     <p class="soft-text reveal">Umrimizning eng yorqin kuniga siz ham guvoh bo'lishingizni istaymiz. Quvonchimiz siz bilan bo'lsa, u yanada to'kis bo'ladi.</p>
   </section>
 
-  <section class="toyona section">
-    <div class="small-caps reveal">Samimiy tilak</div>
-    <div class="script reveal" style="font-size:38px">To'yona</div>
-    <img class="art-img reveal" src="https://assets.e-invitation.uz/manor-edition/cake.webp" alt="">
-    <p class="soft-text reveal">Qalban to'yona atamoqchi bo'lsangiz, quyidagi karta raqamidan foydalanishingiz mumkin</p>
-    <div class="bank-card reveal">
-      <div class="bank-name" data-cfg="bankName">Kapital Bank</div>
-      <div class="card-number" data-cfg="cardNumber">8600 0312 5614 9920</div>
-      <div class="holder"><span data-cfg="cardHolder">CARD HOLDER</span></div>
-    </div>
-    <button class="outline-btn reveal" id="copyBtn" type="button">
-      <svg viewBox="0 0 24 24" fill="none" aria-hidden="true"><path d="M9 9h10v10H9zM5 15H4a1 1 0 0 1-1-1V5a1 1 0 0 1 1-1h9a1 1 0 0 1 1 1v1" stroke="currentColor" stroke-width="1.5" stroke-linejoin="round"/></svg>
-      <span>Raqamni nusxalash</span>
-    </button>
-  </section>
 
   <section class="section">
     <div class="small-caps reveal">Bog'lanish</div>
@@ -838,9 +795,7 @@ const CONFIG={
   phoneTel:"+998901234567",
   instagram:"@username",
   instagramUrl:"https://instagram.com/username",
-  bankName:"Kapital Bank",
-  cardNumber:"8600 0312 5614 9920",
-  cardHolder:"CARD HOLDER",
+
   music:""
 };
 
@@ -887,20 +842,6 @@ function showToast(text){
   toast.classList.add("show");
   clearTimeout(toastTimer);
   toastTimer=setTimeout(()=>toast.classList.remove("show"),1700);
-}
-document.getElementById("copyBtn").addEventListener("click",()=>{
-  const number=CONFIG.cardNumber.replace(/\s/g,"");
-  const done=()=>showToast("Nusxalandi");
-  if(navigator.clipboard) navigator.clipboard.writeText(number).then(done).catch(()=>{fallbackCopy(number);done();});
-  else {fallbackCopy(number);done();}
-});
-function fallbackCopy(text){
-  const area=document.createElement("textarea");
-  area.value=text;
-  document.body.appendChild(area);
-  area.select();
-  try{document.execCommand("copy");}catch(_){}
-  area.remove();
 }
 
 const audio=document.getElementById("audio");
