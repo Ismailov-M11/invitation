@@ -170,21 +170,13 @@ img{display:block;max-width:100%}
 }
 .cover-door.left{left:0;right:auto;transform-origin:left center}
 .cover-door.left:before{
-  opacity:.78;
-  background-color:#241a0e;
-  background-image:
-    repeating-linear-gradient(90deg,transparent 0,transparent 26px,rgba(0,0,0,.22) 26px,rgba(0,0,0,.22) 29px),
-    repeating-linear-gradient(180deg,transparent 0,transparent 56px,rgba(0,0,0,.16) 56px,rgba(0,0,0,.16) 60px),
-    linear-gradient(to right,#3a2910 0%,#2a1e0c 40%,#1b1308 70%,#0e0c07 100%);
+  opacity:.76;
+  background:linear-gradient(to right,#0d0a05 0%,#1e1508 30%,#2e2010 60%,#241a0c 100%);
 }
 .cover-door.right{left:auto;right:0;transform-origin:right center}
 .cover-door.right:before{
-  opacity:.78;
-  background-color:#241a0e;
-  background-image:
-    repeating-linear-gradient(90deg,rgba(0,0,0,.22) 0,rgba(0,0,0,.22) 3px,transparent 3px,transparent 29px),
-    repeating-linear-gradient(180deg,transparent 0,transparent 56px,rgba(0,0,0,.16) 56px,rgba(0,0,0,.16) 60px),
-    linear-gradient(to left,#3a2910 0%,#2a1e0c 40%,#1b1308 70%,#0e0c07 100%);
+  opacity:.76;
+  background:linear-gradient(to left,#0d0a05 0%,#1e1508 30%,#2e2010 60%,#241a0c 100%);
 }
 .cover.opening .cover-depth{transform:scale(1.24) translateY(-2.5%);filter:saturate(1.05) contrast(1.04) brightness(1.08)}
 .cover.opening .cover-door.left{transform:translateX(-62%) rotateY(-24deg) scale(1.08);filter:brightness(.82) blur(.2px);opacity:.92}
@@ -698,7 +690,7 @@ img{display:block;max-width:100%}
 <div class="cover" id="cover">
   <div class="cover-inner">
     <div class="cover-depth">
-      <video id="gateVid" src="assets/video.mp4" muted playsinline autoplay loop preload="auto"></video>
+      <video id="gateVid" src="assets/video.mp4" muted playsinline preload="auto"></video>
     </div>
     <div class="cover-door left"></div>
     <div class="cover-door right"></div>
@@ -1000,14 +992,13 @@ function showToast(text){
 const audio=document.getElementById("audio");
 const musicBtn=document.getElementById("musicBtn");
 if(CONFIG.music) audio.src=CONFIG.music;
-// gateVid: try autoplay immediately; fall back to first user touch
+// gateVid: show first frame only (no autoplay, no loop)
 (()=>{
   const gv=document.getElementById("gateVid");
   if(!gv)return;
-  const tryPlay=()=>gv.play().catch(()=>{});
-  tryPlay();
-  document.addEventListener("pointerdown",tryPlay,{once:true});
-  document.addEventListener("touchstart",tryPlay,{once:true,passive:true});
+  const showFirstFrame=()=>{gv.currentTime=0.01;};
+  if(gv.readyState>=2) showFirstFrame();
+  else gv.addEventListener("loadeddata",showFirstFrame,{once:true});
 })();
 musicBtn.addEventListener("click",()=>{
   if(!CONFIG.music) return showToast("Musiqa ulanmagan");
