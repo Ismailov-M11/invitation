@@ -143,7 +143,7 @@ img{display:block;max-width:100%}
   filter:saturate(.94) contrast(.98);
   transition:transform 2.45s cubic-bezier(.16,.72,.14,1),filter 2.45s ease;
 }
-.cover-depth img,
+.cover-depth video,
 .cover-door:before{
   position:absolute;
   inset:0;
@@ -152,7 +152,6 @@ img{display:block;max-width:100%}
   object-fit:cover;
   object-position:center top;
 }
-.cover-depth img{animation:kenBurns 14s ease-in-out infinite alternate}
 .cover-door{
   width:50%;
   transition:transform 2.05s cubic-bezier(.2,.82,.16,1),filter 2.05s ease,opacity 1.65s ease;
@@ -161,24 +160,33 @@ img{display:block;max-width:100%}
 }
 .cover-door:before{
   content:"";
-  background-repeat:no-repeat;
-  background-size:cover;
-  filter:contrast(1.02);
+  /* dark carved-wood gate panels */
+  background-image:
+    repeating-linear-gradient(
+      180deg,
+      transparent 0,transparent 56px,
+      rgba(0,0,0,.13) 56px,rgba(0,0,0,.13) 60px
+    );
 }
 .cover-door.left{left:0;right:auto;transform-origin:left center}
-.cover-door.left:before{background-image:url("assets/gate-left.png");background-position:right center}
+.cover-door.left:before{
+  background-color:#241a0e;
+  background-image:
+    repeating-linear-gradient(90deg,transparent 0,transparent 26px,rgba(0,0,0,.18) 26px,rgba(0,0,0,.18) 29px),
+    repeating-linear-gradient(180deg,transparent 0,transparent 56px,rgba(0,0,0,.13) 56px,rgba(0,0,0,.13) 60px),
+    linear-gradient(to right,#3a2910 0%,#2a1e0c 40%,#1b1308 70%,#0e0c07 100%);
+}
 .cover-door.right{left:auto;right:0;transform-origin:right center}
-.cover-door.right:before{background-image:url("assets/gate-right.png");background-position:left center}
-.cover-arch{position:absolute;inset:0;pointer-events:none}
-.cover-arch img{
-  position:absolute;inset:0;width:100%;height:100%;
-  object-fit:cover;object-position:center top;
-  transition:transform 2.4s cubic-bezier(.20,.72,.14,1),opacity 1.5s ease 1.05s;
+.cover-door.right:before{
+  background-color:#241a0e;
+  background-image:
+    repeating-linear-gradient(90deg,rgba(0,0,0,.18) 0,rgba(0,0,0,.18) 3px,transparent 3px,transparent 29px),
+    repeating-linear-gradient(180deg,transparent 0,transparent 56px,rgba(0,0,0,.13) 56px,rgba(0,0,0,.13) 60px),
+    linear-gradient(to left,#3a2910 0%,#2a1e0c 40%,#1b1308 70%,#0e0c07 100%);
 }
 .cover.opening .cover-depth{transform:scale(1.24) translateY(-2.5%);filter:saturate(1.05) contrast(1.04) brightness(1.08)}
 .cover.opening .cover-door.left{transform:translateX(-62%) rotateY(-24deg) scale(1.08);filter:brightness(.82) blur(.2px);opacity:.92}
 .cover.opening .cover-door.right{transform:translateX(62%) rotateY(24deg) scale(1.08);filter:brightness(.82) blur(.2px);opacity:.92}
-.cover.opening .cover-arch img{transform:scale(1.85);opacity:0}
 .cover-shade{
   position:absolute;
   inset:0;
@@ -687,10 +695,11 @@ img{display:block;max-width:100%}
 </div>
 <div class="cover" id="cover">
   <div class="cover-inner">
-    <div class="cover-depth"><img src="assets/inside.jpg" alt=""></div>
+    <div class="cover-depth">
+      <video id="gateVid" src="assets/video.mp4" muted playsinline autoplay loop></video>
+    </div>
     <div class="cover-door left"></div>
     <div class="cover-door right"></div>
-    <div class="cover-arch"><img src="assets/arch.png" alt=""></div>
     <div class="cover-petals" aria-hidden="true">
       <span style="--x:9%;--s:18px;--d:18s;--dx:120px;--delay:-3s">❀</span>
       <span style="--x:22%;--s:15px;--d:21s;--dx:-80px;--delay:-12s">✿</span>
@@ -1044,6 +1053,9 @@ document.getElementById("openBtn").addEventListener("click",()=>{
     musicBtn.style.display="flex";
     audio.play().then(()=>musicBtn.classList.add("spin")).catch(()=>{});
   }
+  // prime introVid inside user-gesture stack so mobile browsers allow later play()
+  const introVid=document.getElementById("introVid");
+  if(introVid){introVid.play().then(()=>introVid.pause()).catch(()=>{});}
   setTimeout(()=>{
     document.body.classList.remove("locked");
     observeReveals();
@@ -1052,11 +1064,11 @@ document.getElementById("openBtn").addEventListener("click",()=>{
   setTimeout(()=>{
     cover.style.display="none";
     observeTw();
-    // start video when gate is fully gone — user sees it from frame 0
-    const vid=document.getElementById("introVid");
-    if(vid){
-      vid.play().catch(()=>{});
-      vid.addEventListener("ended",()=>{vid.pause();},{once:true});
+    // play intro video from frame 0 after gate is fully gone
+    if(introVid){
+      introVid.currentTime=0;
+      introVid.play().catch(()=>{});
+      introVid.addEventListener("ended",()=>{introVid.pause();},{once:true});
     }
   },3200);
   // intro typewriter fires AFTER gate finishes (3200ms)
