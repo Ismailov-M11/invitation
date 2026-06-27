@@ -696,7 +696,7 @@ img{display:block;max-width:100%}
 <div class="cover" id="cover">
   <div class="cover-inner">
     <div class="cover-depth">
-      <video id="gateVid" src="assets/video.mp4" muted playsinline autoplay loop></video>
+      <video id="gateVid" src="assets/video.mp4" muted playsinline autoplay loop preload="auto"></video>
     </div>
     <div class="cover-door left"></div>
     <div class="cover-door right"></div>
@@ -998,6 +998,15 @@ function showToast(text){
 const audio=document.getElementById("audio");
 const musicBtn=document.getElementById("musicBtn");
 if(CONFIG.music) audio.src=CONFIG.music;
+// gateVid: try autoplay immediately; fall back to first user touch
+(()=>{
+  const gv=document.getElementById("gateVid");
+  if(!gv)return;
+  const tryPlay=()=>gv.play().catch(()=>{});
+  tryPlay();
+  document.addEventListener("pointerdown",tryPlay,{once:true});
+  document.addEventListener("touchstart",tryPlay,{once:true,passive:true});
+})();
 musicBtn.addEventListener("click",()=>{
   if(!CONFIG.music) return showToast("Musiqa ulanmagan");
   if(audio.paused) audio.play().then(()=>musicBtn.classList.add("spin")).catch(()=>{});
