@@ -201,6 +201,9 @@ img{display:block;max-width:100%}
   -webkit-mask-image:-webkit-radial-gradient(white,black);
   isolation:isolate;
 }
+/* After cover is removed, dark bg no longer needed — transparent prevents
+   black gap if canvas is slightly shorter than the container */
+body:not(.locked) .intro-poster{background:transparent}
 .intro-poster video{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;object-position:center center;display:block}
 .intro-poster:after{display:none}
 .intro-copy{
