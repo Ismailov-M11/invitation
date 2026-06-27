@@ -132,19 +132,15 @@ img{display:block;max-width:100%}
   box-shadow:0 0 35px rgba(95,74,44,.16);
   transform-style:preserve-3d;
 }
-.cover-depth,
-.cover-door{
+.cover-depth{
   position:absolute;
   inset:0;
   overflow:hidden;
-}
-.cover-depth{
   transform:scale(1.02);
   filter:saturate(.94) contrast(.98);
   transition:transform 2.45s cubic-bezier(.16,.72,.14,1),filter 2.45s ease;
 }
-.cover-depth video,
-.cover-door:before{
+.cover-depth video{
   position:absolute;
   inset:0;
   width:100%;
@@ -152,35 +148,7 @@ img{display:block;max-width:100%}
   object-fit:cover;
   object-position:center top;
 }
-.cover-door{
-  width:50%;
-  transition:transform 2.05s cubic-bezier(.2,.82,.16,1),filter 2.05s ease,opacity 1.65s ease;
-  transform-style:preserve-3d;
-  will-change:transform;
-}
-.cover-door:before{
-  content:"";
-  /* dark carved-wood gate panels */
-  background-image:
-    repeating-linear-gradient(
-      180deg,
-      transparent 0,transparent 56px,
-      rgba(0,0,0,.13) 56px,rgba(0,0,0,.13) 60px
-    );
-}
-.cover-door.left{left:0;right:auto;transform-origin:left center}
-.cover-door.left:before{
-  opacity:.76;
-  background:linear-gradient(to right,#0d0a05 0%,#1e1508 30%,#2e2010 60%,#241a0c 100%);
-}
-.cover-door.right{left:auto;right:0;transform-origin:right center}
-.cover-door.right:before{
-  opacity:.76;
-  background:linear-gradient(to left,#0d0a05 0%,#1e1508 30%,#2e2010 60%,#241a0c 100%);
-}
-.cover.opening .cover-depth{transform:scale(1.24) translateY(-2.5%);filter:saturate(1.05) contrast(1.04) brightness(1.08)}
-.cover.opening .cover-door.left{transform:translateX(-62%) rotateY(-24deg) scale(1.08);filter:brightness(.82) blur(.2px);opacity:.92}
-.cover.opening .cover-door.right{transform:translateX(62%) rotateY(24deg) scale(1.08);filter:brightness(.82) blur(.2px);opacity:.92}
+.cover.opening .cover-depth{transform:scale(1.08) translateY(-1%);filter:saturate(1.05) contrast(1.04) brightness(1.06)}
 .cover-shade{
   position:absolute;
   inset:0;
@@ -692,8 +660,6 @@ img{display:block;max-width:100%}
     <div class="cover-depth">
       <video id="gateVid" src="assets/video.mp4" muted playsinline preload="auto"></video>
     </div>
-    <div class="cover-door left"></div>
-    <div class="cover-door right"></div>
     <div class="cover-petals" aria-hidden="true">
       <span style="--x:9%;--s:18px;--d:18s;--dx:120px;--delay:-3s">❀</span>
       <span style="--x:22%;--s:15px;--d:21s;--dx:-80px;--delay:-12s">✿</span>
