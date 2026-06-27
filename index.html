@@ -161,18 +161,24 @@ img{display:block;max-width:100%}
 }
 .cover-door:before{
   content:"";
-  background-image:url("https://assets.e-invitation.uz/manor-edition/intro-poster.jpg");
   background-repeat:no-repeat;
-  background-size:200% 100%;
+  background-size:cover;
   filter:contrast(1.02);
 }
 .cover-door.left{left:0;right:auto;transform-origin:left center}
-.cover-door.left:before{background-position:left top}
+.cover-door.left:before{background-image:url("assets/gate-left.png");background-position:right center}
 .cover-door.right{left:auto;right:0;transform-origin:right center}
-.cover-door.right:before{background-position:right top}
+.cover-door.right:before{background-image:url("assets/gate-right.png");background-position:left center}
+.cover-arch{position:absolute;inset:0;pointer-events:none}
+.cover-arch img{
+  position:absolute;inset:0;width:100%;height:100%;
+  object-fit:cover;object-position:center top;
+  transition:transform 2.4s cubic-bezier(.20,.72,.14,1),opacity 1.5s ease 1.05s;
+}
 .cover.opening .cover-depth{transform:scale(1.24) translateY(-2.5%);filter:saturate(1.05) contrast(1.04) brightness(1.08)}
 .cover.opening .cover-door.left{transform:translateX(-62%) rotateY(-24deg) scale(1.08);filter:brightness(.82) blur(.2px);opacity:.92}
 .cover.opening .cover-door.right{transform:translateX(62%) rotateY(24deg) scale(1.08);filter:brightness(.82) blur(.2px);opacity:.92}
+.cover.opening .cover-arch img{transform:scale(1.85);opacity:0}
 .cover-shade{
   position:absolute;
   inset:0;
@@ -674,9 +680,10 @@ img{display:block;max-width:100%}
 <body class="locked">
 <div class="cover" id="cover">
   <div class="cover-inner">
-    <div class="cover-depth"><img src="https://assets.e-invitation.uz/manor-edition/hero.jpg" alt=""></div>
+    <div class="cover-depth"><img src="assets/inside.jpg" alt=""></div>
     <div class="cover-door left"></div>
     <div class="cover-door right"></div>
+    <div class="cover-arch"><img src="assets/arch.png" alt=""></div>
     <div class="cover-petals" aria-hidden="true">
       <span style="--x:9%;--s:18px;--d:18s;--dx:120px;--delay:-3s">❀</span>
       <span style="--x:22%;--s:15px;--d:21s;--dx:-80px;--delay:-12s">✿</span>
