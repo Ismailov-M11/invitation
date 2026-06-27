@@ -1017,7 +1017,8 @@ document.getElementById("openBtn").addEventListener("click",()=>{
         const c=document.createElement('canvas');
         c.width=Math.round(cw*dpr);
         c.height=Math.round(ch*dpr);
-        c.style.cssText='position:absolute;inset:0;width:100%;height:100%;display:block';
+        // Use explicit px — percentage + inset conflict on iOS during scroll
+        c.style.cssText='position:absolute;top:0;left:0;width:'+cw+'px;height:'+ch+'px;display:block';
         const ctx=c.getContext('2d');
         ctx.scale(dpr,dpr);
         ctx.drawImage(vid,(cw-vw*s)/2,(ch-vh*s)/2,vw*s,vh*s);
