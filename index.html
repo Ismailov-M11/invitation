@@ -914,30 +914,25 @@ function showToast(text){
 const audio=document.getElementById("audio");
 const musicBtn=document.getElementById("musicBtn");
 if(CONFIG.music) audio.src=CONFIG.music;
-// Prefetch video as Blob — bypasses iOS WebKit's lazy streaming cap.
-// iOS intentionally stops buffering after ~150-200KB via native <video> streaming,
-// causing the 1-2s freeze. fetch() downloads the full file regardless.
+// Two-phase video loading:
+// Phase 1 (no gesture): keep native src — #t=0.001 shows first frame on iOS.
+// Phase 2 (on tap):     swap to blob URL inside user-gesture so play() works on iOS.
 (()=>{
   const vid=document.getElementById("introVid");
   if(!vid)return;
   const showFirst=()=>{try{vid.currentTime=0.001;}catch(e){}};
+  vid.load(); // trigger native metadata download + first-frame render
+  if(vid.readyState>=2)showFirst();
+  else{
+    vid.addEventListener("loadeddata",showFirst,{once:true});
+    vid.addEventListener("canplay",showFirst,{once:true});
+  }
+  // Background-download full video as blob (ready before user taps)
+  window._vidBlobUrl=null;
   fetch("assets/video.mp4")
     .then(r=>{if(!r.ok)throw 0;return r.blob();})
-    .then(blob=>{
-      const url=URL.createObjectURL(blob);
-      vid.src=url+"#t=0.001";
-      vid.load();
-      vid.addEventListener("canplay",showFirst,{once:true});
-    })
-    .catch(()=>{
-      // fallback: native streaming (src already set in HTML)
-      vid.load();
-      if(vid.readyState>=2)showFirst();
-      else{
-        vid.addEventListener("loadeddata",showFirst,{once:true});
-        vid.addEventListener("canplay",showFirst,{once:true});
-      }
-    });
+    .then(blob=>{window._vidBlobUrl=URL.createObjectURL(blob);})
+    .catch(()=>{/* fallback: native streaming on play */});
 })();
 musicBtn.addEventListener("click",()=>{
   if(!CONFIG.music) return showToast("Musiqa ulanmagan");
@@ -1002,9 +997,15 @@ document.getElementById("openBtn").addEventListener("click",()=>{
     musicBtn.style.display="flex";
     audio.play().then(()=>musicBtn.classList.add("spin")).catch(()=>{});
   }
-  // play video — in user gesture context (reliable on iOS/Android)
+  // play video inside user-gesture context
   if(vid){
-    vid.currentTime=0;
+    if(window._vidBlobUrl){
+      // Blob ready: swap src to memory-backed URL, then play — no streaming stalls on iOS
+      vid.src=window._vidBlobUrl;
+    } else {
+      // Blob not ready yet (very fast tap): play from native streaming
+      vid.currentTime=0;
+    }
     vid.play().catch(()=>{});
     vid.addEventListener("ended",()=>{vid.pause();},{once:true});
     // Stall monitor: poll currentTime — more reliable than 'waiting' event on Android Chrome
