@@ -1017,8 +1017,9 @@ document.getElementById("openBtn").addEventListener("click",()=>{
         const c=document.createElement('canvas');
         c.width=Math.round(cw*dpr);
         c.height=Math.round(ch*dpr);
-        // Use explicit px — percentage + inset conflict on iOS during scroll
-        c.style.cssText='position:absolute;top:0;left:0;width:'+cw+'px;height:'+ch+'px;display:block';
+        // Pin all 4 sides — canvas always matches container regardless of svh
+        // recalculations. No explicit width/height to avoid px mismatch gap.
+        c.style.cssText='position:absolute;top:0;right:0;bottom:0;left:0;display:block';
         const ctx=c.getContext('2d');
         ctx.scale(dpr,dpr);
         ctx.drawImage(vid,(cw-vw*s)/2,(ch-vh*s)/2,vw*s,vh*s);
