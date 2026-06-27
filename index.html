@@ -914,23 +914,30 @@ function showToast(text){
 const audio=document.getElementById("audio");
 const musicBtn=document.getElementById("musicBtn");
 if(CONFIG.music) audio.src=CONFIG.music;
-// iOS ignores preload="auto" until a user gesture — warm on first touch
+// Prefetch video as Blob — bypasses iOS WebKit's lazy streaming cap.
+// iOS intentionally stops buffering after ~150-200KB via native <video> streaming,
+// causing the 1-2s freeze. fetch() downloads the full file regardless.
 (()=>{
   const vid=document.getElementById("introVid");
   if(!vid)return;
-  const showFirst=()=>{try{vid.currentTime=0.01;}catch(e){}};
-  // try non-gesture load (works on desktop/Android)
-  vid.load();
-  if(vid.readyState>=2) showFirst();
-  else{
-    vid.addEventListener("loadeddata",showFirst,{once:true});
-    vid.addEventListener("canplay",showFirst,{once:true});
-  }
-  // first touch = trigger iOS to actually start downloading
-  const warmUp=()=>{
-    if(vid.readyState<1){vid.load();}
-  };
-  document.addEventListener("touchstart",warmUp,{once:true,passive:true});
+  const showFirst=()=>{try{vid.currentTime=0.001;}catch(e){}};
+  fetch("assets/video.mp4")
+    .then(r=>{if(!r.ok)throw 0;return r.blob();})
+    .then(blob=>{
+      const url=URL.createObjectURL(blob);
+      vid.src=url+"#t=0.001";
+      vid.load();
+      vid.addEventListener("canplay",showFirst,{once:true});
+    })
+    .catch(()=>{
+      // fallback: native streaming (src already set in HTML)
+      vid.load();
+      if(vid.readyState>=2)showFirst();
+      else{
+        vid.addEventListener("loadeddata",showFirst,{once:true});
+        vid.addEventListener("canplay",showFirst,{once:true});
+      }
+    });
 })();
 musicBtn.addEventListener("click",()=>{
   if(!CONFIG.music) return showToast("Musiqa ulanmagan");
