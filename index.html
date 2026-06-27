@@ -620,7 +620,7 @@ img{display:block;max-width:100%}
 <main class="phone">
   <section class="intro section">
     <div class="intro-poster">
-      <video id="introVid" src="assets/video.mp4" muted playsinline preload="auto"></video>
+      <video id="introVid" src="assets/video.mp4#t=0.001" muted playsinline preload="metadata"></video>
       <div class="cover" id="cover">
         <div class="cover-petals" aria-hidden="true">
           <span style="--x:9%;--s:18px;--d:18s;--dx:120px;--delay:-3s">❀</span>
@@ -1000,11 +1000,21 @@ document.getElementById("openBtn").addEventListener("click",()=>{
     vid.currentTime=0;
     vid.play().catch(()=>{});
     vid.addEventListener("ended",()=>{vid.pause();},{once:true});
-    // if video stalls mid-play, try to resume
-    vid.addEventListener("waiting",()=>{
-      // briefly pause/play to coax the buffer on some mobile browsers
-      vid.play().catch(()=>{});
-    });
+    // Stall monitor: poll currentTime — more reliable than 'waiting' event on Android Chrome
+    let lastT=-1,stallN=0;
+    const stallTimer=setInterval(()=>{
+      if(vid.paused||vid.ended){clearInterval(stallTimer);return;}
+      if(vid.currentTime===lastT){
+        stallN++;
+        if(stallN>=3&&vid.buffered.length>0){
+          const ahead=vid.buffered.end(vid.buffered.length-1)-vid.currentTime;
+          if(ahead>0.1) vid.play().catch(()=>{});
+          stallN=0;
+        }
+      }else{stallN=0;}
+      lastT=vid.currentTime;
+    },500);
+    vid.addEventListener("ended",()=>clearInterval(stallTimer),{once:true});
   }
   // typewriter after cover fades
   setTimeout(()=>{
