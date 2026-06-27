@@ -195,12 +195,14 @@ img{display:block;max-width:100%}
   height:100dvh;
   overflow:hidden;
   background:#1b1510;
+  -webkit-transform:translateZ(0);
+  transform:translateZ(0);
 }
 .intro-poster{
   width:100vw;
   margin-left:calc((100vw - 100%) / -2);
 }
-.intro-poster video{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;object-position:center center;display:block}
+.intro-poster video{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;object-position:center center;display:block;-webkit-backface-visibility:hidden;backface-visibility:hidden}
 .intro-poster:after{
   content:"";
   position:absolute;
