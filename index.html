@@ -1017,6 +1017,8 @@ document.getElementById("openBtn").addEventListener("click",()=>{
         c.getContext('2d').drawImage(vid,(cw-vw*s)/2,(ch-vh*s)/2,vw*s,vh*s);
         p.insertBefore(c,vid);
         vid.style.display='none';
+        // Lock container to exact canvas height — eliminates any gap
+        p.style.height=ch+'px';
       }catch(e){/* drawImage unavailable — keep video visible */}
     },{once:true});
     // Stall monitor: poll currentTime — more reliable than 'waiting' event on Android Chrome
