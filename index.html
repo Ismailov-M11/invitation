@@ -195,14 +195,19 @@ img{display:block;max-width:100%}
   height:100svh;
   overflow:hidden;
   background:#1b1510;
-  width:100vw;
-  margin-left:calc((100vw - 100%) / -2);
   /* iOS WebKit: prevents overflow:hidden compositing boundary artifacts */
   -webkit-mask-image:-webkit-radial-gradient(white,black);
   isolation:isolate;
 }
-/* After cover is removed, dark bg no longer needed — transparent prevents
-   black gap if canvas is slightly shorter than the container */
+/* Full-bleed only while cover is showing (phone is also 100vw then).
+   On mobile phone==100vw so this is a no-op; on desktop it expands to
+   fill the viewport for the dramatic opening — removed after unlock so
+   the phone mockup layout is restored. */
+body.locked .intro-poster{
+  width:100vw;
+  margin-left:calc((100vw - 100%) / -2);
+}
+/* After cover is removed, dark bg no longer needed */
 body:not(.locked) .intro-poster{background:transparent}
 .intro-poster video{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;object-position:center center;display:block}
 .intro-poster:after{display:none}
