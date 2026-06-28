@@ -197,8 +197,8 @@ img{display:block;max-width:100%}
   background:#1b1510;
   width:100vw;
   margin-left:calc((100vw - 100%) / -2);
-  /* iOS WebKit: prevents overflow:hidden compositing boundary artifacts */
-  -webkit-mask-image:-webkit-radial-gradient(white,black);
+  /* iOS WebKit: force GPU compositing to prevent overflow:hidden boundary artifacts */
+  transform:translateZ(0);
   isolation:isolate;
 }
 /* After cover is removed, dark bg no longer needed */
@@ -702,6 +702,9 @@ body:not(.locked) .intro-poster{background:transparent}
         </div>
       </div>
     </div>
+    <div class="intro-copy reveal">
+      <p class="lead" data-cfg="lead">muhabbat ila boshlangan yo'limizning eng unutilmas kuniga sizni chorlaymiz</p>
+    </div>
   </section>
 
   <section class="frame-block section">
@@ -1106,12 +1109,20 @@ document.getElementById("openBtn").addEventListener("click",()=>{
             },200);
           });
         },800);
-        // Scroll button scrolls past the intro-poster
+        // Scroll button — slow smooth scroll (1500ms eased)
         if(scrollBtn){
           scrollBtn.addEventListener('click',()=>{
             const introPoster=vid.closest('.intro-poster');
-            const target=introPoster ? introPoster.getBoundingClientRect().bottom+window.scrollY : window.innerHeight;
-            window.scrollTo({top:target,behavior:'smooth'});
+            const target=introPoster?introPoster.getBoundingClientRect().bottom+window.scrollY:window.innerHeight;
+            const start=window.scrollY,dist=target-start,dur=1500;
+            let t0=null;
+            function ease(t){return t<.5?4*t*t*t:(t-1)*(2*t-2)*(2*t-2)+1}
+            (function step(now){
+              if(!t0)t0=now;
+              const p=Math.min((now-t0)/dur,1);
+              window.scrollTo(0,start+dist*ease(p));
+              if(p<1)requestAnimationFrame(step);
+            })(performance.now());
           },{once:true});
         }
       }
