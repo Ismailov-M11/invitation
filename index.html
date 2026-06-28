@@ -943,9 +943,13 @@ if(CONFIG.music) audio.src=CONFIG.music;
       // so on click we just seek+play with no visible flash.
       if(!opened){
         vid.src=url;
+        vid.load(); // iOS requires explicit load() to read blob URLs
         const restoreFirst=()=>{try{vid.currentTime=0.001;}catch(e){}};
         if(vid.readyState>=2) restoreFirst();
-        else vid.addEventListener('loadeddata',restoreFirst,{once:true});
+        else{
+          vid.addEventListener('loadeddata',restoreFirst,{once:true});
+          vid.addEventListener('canplay',restoreFirst,{once:true});
+        }
       }
     })
     .catch(()=>{/* fallback: native streaming on play */});
