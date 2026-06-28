@@ -47,12 +47,20 @@ body.locked .phone{width:100vw;background:#1b1510;box-shadow:none;overflow:visib
       radial-gradient(circle at 50% 18%,rgba(255,255,255,.38),transparent 28rem),
       linear-gradient(90deg,#e8ddc7 0,#f7efd9 18%,#f3ead6 50%,#f7efd9 82%,#e8ddc7 100%);
   }
-  /* intro-poster must NOT escape the phone on desktop — reset the mobile bleed */
-  /* max-height = phone-width × video-aspect (720×1264) → video always scales by
-     width, never by height, so the frame looks identical on any screen size */
-  .intro-poster{width:100%;margin-left:0;max-height:calc(var(--w) * 1264 / 720)}
-  /* Show top of portrait video (flower arch) not center on desktop */
-  .intro-poster video{object-position:top center}
+  /* intro-poster stays within phone — reset mobile full-bleed.
+     Height capped to natural video aspect so content never gets cropped. */
+  .intro-poster{
+    width:100%;
+    margin-left:0;
+    max-height:calc(var(--w) * 1264 / 720);
+    background:#1b1510 !important; /* always dark — fills side bars from contain */
+  }
+  /* object-fit:contain shows the full portrait frame (no cropping).
+     Side bars filled by the dark #1b1510 intro-poster background. */
+  .intro-poster video{
+    object-fit:contain;
+    object-position:center center;
+  }
 }
 a{color:inherit;text-decoration:none}
 button{font:inherit}
