@@ -1109,20 +1109,25 @@ document.getElementById("openBtn").addEventListener("click",()=>{
             },200);
           });
         },800);
-        // Scroll button — slow smooth scroll (1500ms eased)
+        // Scroll button — slow smooth scroll
         if(scrollBtn){
           scrollBtn.addEventListener('click',()=>{
-            const introPoster=vid.closest('.intro-poster');
-            const target=introPoster?introPoster.getBoundingClientRect().bottom+window.scrollY:window.innerHeight;
-            const start=window.scrollY,dist=target-start,dur=2800;
+            // offsetTop is stable during animation (unlike getBoundingClientRect)
+            const introSection=document.querySelector('.intro.section');
+            const target=introSection
+              ?introSection.offsetTop+introSection.offsetHeight
+              :window.innerHeight;
+            const start=window.scrollY,dist=target-start,dur=3200;
+            // easeOutQuart: starts at full speed, decelerates — no mid-animation jolt
+            function ease(t){return 1-Math.pow(1-t,4)}
             let t0=null;
-            function ease(t){return -(Math.cos(Math.PI*t)-1)/2} /* easeInOutSine — very gentle */
-            (function step(now){
+            function step(now){
               if(!t0)t0=now;
               const p=Math.min((now-t0)/dur,1);
-              window.scrollTo(0,start+dist*ease(p));
+              document.documentElement.scrollTop=start+dist*ease(p);
               if(p<1)requestAnimationFrame(step);
-            })(performance.now());
+            }
+            requestAnimationFrame(step);
           },{once:true});
         }
       }
