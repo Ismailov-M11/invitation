@@ -48,7 +48,9 @@ body.locked .phone{width:100vw;background:#1b1510;box-shadow:none;overflow:visib
       linear-gradient(90deg,#e8ddc7 0,#f7efd9 18%,#f3ead6 50%,#f7efd9 82%,#e8ddc7 100%);
   }
   /* intro-poster must NOT escape the phone on desktop — reset the mobile bleed */
-  .intro-poster{width:100%;margin-left:0}
+  /* max-height = phone-width × video-aspect (720×1264) → video always scales by
+     width, never by height, so the frame looks identical on any screen size */
+  .intro-poster{width:100%;margin-left:0;max-height:calc(var(--w) * 1264 / 720)}
   /* Show top of portrait video (flower arch) not center on desktop */
   .intro-poster video{object-position:top center}
 }
