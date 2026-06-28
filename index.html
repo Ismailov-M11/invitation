@@ -49,6 +49,8 @@ body.locked .phone{width:100vw;background:#1b1510;box-shadow:none;overflow:visib
   }
   /* intro-poster must NOT escape the phone on desktop — reset the mobile bleed */
   .intro-poster{width:100%;margin-left:0}
+  /* Show top of portrait video (flower arch) not center on desktop */
+  .intro-poster video{object-position:top center}
 }
 a{color:inherit;text-decoration:none}
 button{font:inherit}
@@ -1013,8 +1015,10 @@ document.getElementById("openBtn").addEventListener("click",()=>{
     vid.play().catch(()=>{});
     vid.addEventListener("ended",()=>{
       vid.pause();
-      // Replace <video> with <canvas> showing last frame — eliminates iOS WebKit
-      // video GPU compositing layer that causes scroll parallax on paused video
+      // Canvas replacement only needed on iOS WebKit (scroll parallax on paused video).
+      // Desktop browsers don't have this issue — leave video paused as-is.
+      const isIOS=/iPad|iPhone|iPod/.test(navigator.userAgent)&&!window.MSStream;
+      if(!isIOS) return;
       try{
         const p=vid.parentNode;
         const cw=p.clientWidth, ch=p.clientHeight;
