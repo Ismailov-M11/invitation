@@ -1096,8 +1096,9 @@ document.getElementById("openBtn").addEventListener("click",()=>{
       const greetEl=document.getElementById('vidEndGreeting');
       const scrollBtn=document.getElementById('vidEndScroll');
       if(overlay&&greetEl){
-        const helloText=(LANGS[lang]||LANGS.uz).hello;
-        const greetText=(LANGS[lang]||LANGS.uz).dearGuest;
+        const _l=localStorage.getItem("lang")||"uz";
+        const helloText=(LANGS[_l]||LANGS.uz).hello;
+        const greetText=(LANGS[_l]||LANGS.uz).dearGuest;
         overlay.classList.add('show');
         // Type "Assalomu alaykum!" first, then "Hurmatli Mehmonimiz,"
         setTimeout(()=>{
