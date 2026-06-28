@@ -492,7 +492,9 @@ body:not(.locked) .intro-poster{background:transparent}
   cursor:pointer;
 }
 .music svg{width:17px;height:17px}
+/* spin persists; animation-play-state freezes/resumes at current angle */
 .music.spin svg{animation:spin 4s linear infinite}
+.music.spin.paused svg{animation-play-state:paused}
 .toast{
   position:fixed;
   left:50%;
@@ -580,7 +582,12 @@ body:not(.locked) .intro-poster{background:transparent}
   .frame-text .names{font-size:36px}
   .countdown{gap:5px}
   .timebox strong{font-size:25px}
-  .music{transform:translateX(calc(50vw - 66px))}
+  /* Desktop: move music button to right side of phone container */
+  .music{
+    left:calc(50% + var(--w) / 2 + 16px);
+    bottom:40px;
+    transform:none;
+  }
 }
 /* ─── Language switcher ─── */
 .lang-sw{position:fixed;top:12px;right:12px;z-index:160;display:flex;gap:2px;
@@ -940,8 +947,11 @@ if(CONFIG.music) audio.src=CONFIG.music;
 })();
 musicBtn.addEventListener("click",()=>{
   if(!CONFIG.music) return showToast("Musiqa ulanmagan");
-  if(audio.paused) audio.play().then(()=>musicBtn.classList.add("spin")).catch(()=>{});
-  else {audio.pause();musicBtn.classList.remove("spin");}
+  if(audio.paused){
+    audio.play().then(()=>{musicBtn.classList.add("spin");musicBtn.classList.remove("paused");}).catch(()=>{});
+  } else {
+    audio.pause();musicBtn.classList.add("paused");
+  }
 });
 
 /* ── typewriter ── */
