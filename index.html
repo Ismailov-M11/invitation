@@ -209,47 +209,46 @@ body:not(.locked) .intro-poster{background:transparent}
 .vid-end-overlay{
   position:absolute;inset:0;z-index:4;
   display:flex;flex-direction:column;justify-content:space-between;
-  padding:40px 28px 52px;
+  padding:0 0 60px;
   opacity:0;pointer-events:none;
   transition:opacity 1.2s ease;
 }
 .vid-end-overlay.show{opacity:1;pointer-events:auto}
 .vid-end-top{
-  background:linear-gradient(180deg,rgba(255,248,236,.88) 0%,rgba(255,248,236,0) 100%);
-  padding:28px 20px 48px;
-  margin:-40px -28px 0;
+  background:linear-gradient(180deg,rgba(255,248,236,.92) 0%,rgba(255,248,236,0) 100%);
+  /* 76px top padding pushes text below the fixed lang-sw button (~48px tall) */
+  padding:76px 28px 60px;
   text-align:center;
 }
 .vid-end-hello{
-  font-family:var(--sans);
-  font-size:.78rem;
-  letter-spacing:.18em;
-  text-transform:uppercase;
+  font-family:var(--script);
+  font-size:clamp(22px,5.5vw,30px);
   color:var(--muted);
-  margin-bottom:6px;
-  min-height:1.2em;
+  margin-bottom:4px;
+  min-height:1.3em;
 }
 .vid-end-greeting{
   font-family:var(--script);
-  font-size:clamp(24px,6.5vw,36px);
+  font-size:clamp(32px,8.5vw,48px);
   color:var(--rose-dark);
   letter-spacing:.02em;
   min-height:1.4em;
 }
 .vid-end-scroll{
   align-self:center;
-  display:flex;flex-direction:column;align-items:center;gap:8px;
-  background:rgba(255,248,236,.82);
-  border:1px solid rgba(158,97,92,.35);
-  backdrop-filter:blur(6px);
+  display:flex;flex-direction:column;align-items:center;gap:10px;
+  background:rgba(255,248,236,.88);
+  border:1px solid rgba(158,97,92,.4);
+  backdrop-filter:blur(8px);
   color:var(--rose-dark);
-  font-family:var(--sans);font-size:.72rem;letter-spacing:.12em;text-transform:uppercase;
-  padding:12px 32px;border-radius:999px;cursor:pointer;
-  box-shadow:0 4px 16px rgba(158,97,92,.15);
+  font-family:var(--sans);font-size:.85rem;letter-spacing:.12em;text-transform:uppercase;
+  padding:16px 40px;border-radius:999px;cursor:pointer;
+  box-shadow:0 4px 20px rgba(158,97,92,.18);
   opacity:0;transform:translateY(10px);
   transition:opacity .7s ease,transform .7s ease;
 }
 .vid-end-scroll.show{opacity:1;transform:translateY(0)}
+.vid-end-scroll svg{width:20px;height:20px}
 .vid-end-scroll svg{width:18px;height:18px}
 /* ── Desktop overrides (MUST be after base rules above to win cascade) ── */
 @media(min-width:549px){
