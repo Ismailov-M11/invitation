@@ -215,28 +215,37 @@ body:not(.locked) .intro-poster{background:transparent}
 }
 .vid-end-overlay.show{opacity:1;pointer-events:auto}
 .vid-end-top{
-  background:linear-gradient(180deg,rgba(10,8,5,.55) 0%,rgba(10,8,5,0) 100%);
-  padding:28px 20px 40px;
+  background:linear-gradient(180deg,rgba(255,248,236,.88) 0%,rgba(255,248,236,0) 100%);
+  padding:28px 20px 48px;
   margin:-40px -28px 0;
   text-align:center;
 }
+.vid-end-hello{
+  font-family:var(--sans);
+  font-size:.78rem;
+  letter-spacing:.18em;
+  text-transform:uppercase;
+  color:var(--muted);
+  margin-bottom:6px;
+  min-height:1.2em;
+}
 .vid-end-greeting{
   font-family:var(--script);
-  font-size:clamp(26px,7vw,38px);
-  color:#f5ead6;
-  text-shadow:0 2px 16px rgba(0,0,0,.45);
+  font-size:clamp(24px,6.5vw,36px);
+  color:var(--rose-dark);
   letter-spacing:.02em;
   min-height:1.4em;
 }
 .vid-end-scroll{
   align-self:center;
   display:flex;flex-direction:column;align-items:center;gap:8px;
-  background:rgba(255,249,235,.18);
-  border:1px solid rgba(245,234,214,.45);
+  background:rgba(255,248,236,.82);
+  border:1px solid rgba(158,97,92,.35);
   backdrop-filter:blur(6px);
-  color:#f5ead6;
+  color:var(--rose-dark);
   font-family:var(--sans);font-size:.72rem;letter-spacing:.12em;text-transform:uppercase;
-  padding:12px 28px;border-radius:999px;cursor:pointer;
+  padding:12px 32px;border-radius:999px;cursor:pointer;
+  box-shadow:0 4px 16px rgba(158,97,92,.15);
   opacity:0;transform:translateY(10px);
   transition:opacity .7s ease,transform .7s ease;
 }
@@ -664,6 +673,7 @@ body:not(.locked) .intro-poster{background:transparent}
       <video id="introVid" src="assets/video.mp4#t=0.001" muted playsinline preload="metadata"></video>
       <div class="vid-end-overlay" id="vidEndOverlay">
         <div class="vid-end-top">
+          <div class="vid-end-hello" id="vidEndHello"></div>
           <div class="vid-end-greeting" id="vidEndGreeting"></div>
         </div>
         <button class="vid-end-scroll" id="vidEndScroll" aria-label="Scroll down">
@@ -691,12 +701,6 @@ body:not(.locked) .intro-poster{background:transparent}
           </button>
         </div>
       </div>
-    </div>
-    <div class="intro-copy reveal">
-      <div class="small-caps" data-cfg="hello">Assalomu alaykum!</div>
-      <h1 id="guestH1" data-cfg="dearGuest">Hurmatli Mehmonimiz,</h1>
-      <p class="lead" data-cfg="lead">muhabbat ila boshlangan yo'limizning eng unutilmas kuniga sizni chorlaymiz</p>
-      <div class="scroll-label" data-cfg="scrollHint">Pastga tushiring</div>
     </div>
   </section>
 
@@ -1085,17 +1089,21 @@ document.getElementById("openBtn").addEventListener("click",()=>{
       }
       // Show greeting overlay on last frame (both iOS and desktop)
       const overlay=document.getElementById('vidEndOverlay');
+      const helloEl=document.getElementById('vidEndHello');
       const greetEl=document.getElementById('vidEndGreeting');
       const scrollBtn=document.getElementById('vidEndScroll');
       if(overlay&&greetEl){
-        // Get current-language "Hurmatli Mehmonimiz" text
-        const greetText=document.getElementById('guestH1')?.textContent||'Hurmatli Mehmonimiz,';
+        const helloText=(LANGS[lang]||LANGS.uz).hello;
+        const greetText=(LANGS[lang]||LANGS.uz).dearGuest;
         overlay.classList.add('show');
-        // Start typing after overlay fades in (1.2s)
+        // Type "Assalomu alaykum!" first, then "Hurmatli Mehmonimiz,"
         setTimeout(()=>{
-          typewriter(greetEl,greetText,60,()=>{
-            // Show scroll button after typing completes
-            if(scrollBtn) scrollBtn.classList.add('show');
+          typewriter(helloEl,helloText,55,()=>{
+            setTimeout(()=>{
+              typewriter(greetEl,greetText,60,()=>{
+                if(scrollBtn) scrollBtn.classList.add('show');
+              });
+            },200);
           });
         },800);
         // Scroll button scrolls past the intro-poster
@@ -1124,15 +1132,6 @@ document.getElementById("openBtn").addEventListener("click",()=>{
     },500);
     vid.addEventListener("ended",()=>clearInterval(stallTimer),{once:true});
   }
-  // typewriter after cover fades (cover starts at 200ms + ~950ms fade = 1150ms, +150ms grace)
-  setTimeout(()=>{
-    const hEl=document.querySelector(".intro .small-caps");
-    const leadEl=document.querySelector(".intro .lead");
-    const guestH1=document.getElementById("guestH1");
-    if(hEl){const txt=hEl.textContent;typewriter(hEl,txt,52);}
-    if(leadEl){setTimeout(()=>wordFade(leadEl),900);}
-    if(guestH1){setTimeout(()=>{const t=guestH1.textContent;typewriter(guestH1,t,38);},1500);}
-  },1300);
 });
 </script>
 </body>
