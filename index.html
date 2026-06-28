@@ -1114,9 +1114,9 @@ document.getElementById("openBtn").addEventListener("click",()=>{
           scrollBtn.addEventListener('click',()=>{
             const introPoster=vid.closest('.intro-poster');
             const target=introPoster?introPoster.getBoundingClientRect().bottom+window.scrollY:window.innerHeight;
-            const start=window.scrollY,dist=target-start,dur=1500;
+            const start=window.scrollY,dist=target-start,dur=2800;
             let t0=null;
-            function ease(t){return t<.5?4*t*t*t:(t-1)*(2*t-2)*(2*t-2)+1}
+            function ease(t){return -(Math.cos(Math.PI*t)-1)/2} /* easeInOutSine — very gentle */
             (function step(now){
               if(!t0)t0=now;
               const p=Math.min((now-t0)/dur,1);
