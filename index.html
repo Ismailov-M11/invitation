@@ -935,23 +935,7 @@ if(CONFIG.music) audio.src=CONFIG.music;
   window._vidBlobUrl=null;
   fetch("assets/video.mp4")
     .then(r=>{if(!r.ok)throw 0;return r.blob();})
-    .then(blob=>{
-      const url=URL.createObjectURL(blob);
-      window._vidBlobUrl=url;
-      // Pre-swap src NOW while cover is still fully opaque.
-      // The brief black loading frame is hidden by the cover,
-      // so on click we just seek+play with no visible flash.
-      if(!opened){
-        vid.src=url;
-        vid.load(); // iOS requires explicit load() to read blob URLs
-        const restoreFirst=()=>{try{vid.currentTime=0.001;}catch(e){}};
-        if(vid.readyState>=2) restoreFirst();
-        else{
-          vid.addEventListener('loadeddata',restoreFirst,{once:true});
-          vid.addEventListener('canplay',restoreFirst,{once:true});
-        }
-      }
-    })
+    .then(blob=>{window._vidBlobUrl=URL.createObjectURL(blob);})
     .catch(()=>{/* fallback: native streaming on play */});
 })();
 musicBtn.addEventListener("click",()=>{
@@ -1005,26 +989,27 @@ document.getElementById("openBtn").addEventListener("click",()=>{
   opened=true;
   const cover=document.getElementById("cover");
   const vid=document.getElementById("introVid");
-  // fade cover out (no slide, just opacity)
-  cover.classList.add("gone");
-  setTimeout(()=>{cover.style.display="none";},1050);
-  // Delay unlock by 80ms: cover is still ~92% opaque at that point,
-  // so the bg change (dark→cream) is hidden and causes no visible flash.
+  // Delay cover fade 200ms: hides the black frame while blob src loads on iOS.
+  // Cover is fully opaque during those 200ms so user sees no flash.
+  setTimeout(()=>{
+    cover.classList.add("gone");
+    setTimeout(()=>{cover.style.display="none";},1050);
+  },200);
+  // Unlock scroll after cover has started fading (280ms = 200ms + 80ms grace)
   setTimeout(()=>{
     document.body.classList.remove("locked");
     observeReveals();
     observeTw();
-  },80);
-  // music
+  },280);
+  // music + video: immediate — must stay inside user-gesture for iOS autoplay
   if(CONFIG.music){
     musicBtn.style.display="flex";
     audio.play().then(()=>musicBtn.classList.add("spin")).catch(()=>{});
   }
-  // play video inside user-gesture context
+  // Swap blob src + play in user-gesture so iOS buffers aggressively (no stalls).
   if(vid){
-    // Src already swapped to blob during background load (no flash on click).
-    // If blob wasn't ready yet (very fast tap), play from current native src.
-    vid.currentTime=0;
+    if(window._vidBlobUrl) vid.src=window._vidBlobUrl;
+    else vid.currentTime=0;
     vid.play().catch(()=>{});
     vid.addEventListener("ended",()=>{
       vid.pause();
@@ -1064,7 +1049,7 @@ document.getElementById("openBtn").addEventListener("click",()=>{
     },500);
     vid.addEventListener("ended",()=>clearInterval(stallTimer),{once:true});
   }
-  // typewriter after cover fades
+  // typewriter after cover fades (cover starts at 200ms + ~950ms fade = 1150ms, +150ms grace)
   setTimeout(()=>{
     const hEl=document.querySelector(".intro .small-caps");
     const leadEl=document.querySelector(".intro .lead");
@@ -1072,7 +1057,7 @@ document.getElementById("openBtn").addEventListener("click",()=>{
     if(hEl){const txt=hEl.textContent;typewriter(hEl,txt,52);}
     if(leadEl){setTimeout(()=>wordFade(leadEl),900);}
     if(guestH1){setTimeout(()=>{const t=guestH1.textContent;typewriter(guestH1,t,38);},1500);}
-  },1100);
+  },1300);
 });
 </script>
 </body>
