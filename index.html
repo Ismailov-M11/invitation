@@ -199,14 +199,6 @@ img{display:block;max-width:100%}
   -webkit-mask-image:-webkit-radial-gradient(white,black);
   isolation:isolate;
 }
-/* Full-bleed only while cover is showing (phone is also 100vw then).
-   On mobile phone==100vw so this is a no-op; on desktop it expands to
-   fill the viewport for the dramatic opening — removed after unlock so
-   the phone mockup layout is restored. */
-body.locked .intro-poster{
-  width:100vw;
-  margin-left:calc((100vw - 100%) / -2);
-}
 /* After cover is removed, dark bg no longer needed */
 body:not(.locked) .intro-poster{background:transparent}
 .intro-poster video{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;object-position:center center;display:block}
