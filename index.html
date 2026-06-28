@@ -205,6 +205,43 @@ img{display:block;max-width:100%}
 body:not(.locked) .intro-poster{background:transparent}
 .intro-poster video{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;object-position:center center;display:block}
 .intro-poster:after{display:none}
+/* ── Video-end overlay ── */
+.vid-end-overlay{
+  position:absolute;inset:0;z-index:4;
+  display:flex;flex-direction:column;justify-content:space-between;
+  padding:40px 28px 52px;
+  opacity:0;pointer-events:none;
+  transition:opacity 1.2s ease;
+}
+.vid-end-overlay.show{opacity:1;pointer-events:auto}
+.vid-end-top{
+  background:linear-gradient(180deg,rgba(10,8,5,.55) 0%,rgba(10,8,5,0) 100%);
+  padding:28px 20px 40px;
+  margin:-40px -28px 0;
+  text-align:center;
+}
+.vid-end-greeting{
+  font-family:var(--script);
+  font-size:clamp(26px,7vw,38px);
+  color:#f5ead6;
+  text-shadow:0 2px 16px rgba(0,0,0,.45);
+  letter-spacing:.02em;
+  min-height:1.4em;
+}
+.vid-end-scroll{
+  align-self:center;
+  display:flex;flex-direction:column;align-items:center;gap:8px;
+  background:rgba(255,249,235,.18);
+  border:1px solid rgba(245,234,214,.45);
+  backdrop-filter:blur(6px);
+  color:#f5ead6;
+  font-family:var(--sans);font-size:.72rem;letter-spacing:.12em;text-transform:uppercase;
+  padding:12px 28px;border-radius:999px;cursor:pointer;
+  opacity:0;transform:translateY(10px);
+  transition:opacity .7s ease,transform .7s ease;
+}
+.vid-end-scroll.show{opacity:1;transform:translateY(0)}
+.vid-end-scroll svg{width:18px;height:18px}
 /* ── Desktop overrides (MUST be after base rules above to win cascade) ── */
 @media(min-width:549px){
   body.locked .phone{width:var(--w);overflow:hidden;box-shadow:0 0 38px rgba(95,74,44,.14)}
@@ -625,6 +662,15 @@ body:not(.locked) .intro-poster{background:transparent}
   <section class="intro section">
     <div class="intro-poster">
       <video id="introVid" src="assets/video.mp4#t=0.001" muted playsinline preload="metadata"></video>
+      <div class="vid-end-overlay" id="vidEndOverlay">
+        <div class="vid-end-top">
+          <div class="vid-end-greeting" id="vidEndGreeting"></div>
+        </div>
+        <button class="vid-end-scroll" id="vidEndScroll" aria-label="Scroll down">
+          <span data-cfg="scrollHint">Pastga tushiring</span>
+          <svg viewBox="0 0 24 24" fill="none" aria-hidden="true"><path d="M12 5v14M5 12l7 7 7-7" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/></svg>
+        </button>
+      </div>
       <div class="cover" id="cover">
         <div class="cover-petals" aria-hidden="true">
           <span style="--x:9%;--s:18px;--d:18s;--dx:120px;--delay:-3s">❀</span>
@@ -1021,24 +1067,46 @@ document.getElementById("openBtn").addEventListener("click",()=>{
     vid.addEventListener("ended",()=>{
       vid.pause();
       // Canvas replacement only needed on iOS WebKit (scroll parallax on paused video).
-      // Desktop browsers don't have this issue — leave video paused as-is.
       const isIOS=/iPad|iPhone|iPod/.test(navigator.userAgent)&&!window.MSStream;
-      if(!isIOS) return;
-      try{
-        const p=vid.parentNode;
-        const cw=p.clientWidth, ch=p.clientHeight;
-        const vw=vid.videoWidth||cw, vh=vid.videoHeight||ch;
-        const s=Math.max(cw/vw, ch/vh);
-        const c=document.createElement('canvas');
-        // Buffer in CSS pixels (no DPR) — avoids iOS intrinsic-size conflicts
-        c.width=cw; c.height=ch;
-        c.style.cssText='position:absolute;top:0;left:0;width:'+cw+'px;height:'+ch+'px;display:block';
-        c.getContext('2d').drawImage(vid,(cw-vw*s)/2,(ch-vh*s)/2,vw*s,vh*s);
-        p.insertBefore(c,vid);
-        vid.style.display='none';
-        // Lock container to exact canvas height — eliminates any gap
-        p.style.height=ch+'px';
-      }catch(e){/* drawImage unavailable — keep video visible */}
+      if(isIOS){
+        try{
+          const p=vid.parentNode;
+          const cw=p.clientWidth, ch=p.clientHeight;
+          const vw=vid.videoWidth||cw, vh=vid.videoHeight||ch;
+          const s=Math.max(cw/vw, ch/vh);
+          const c=document.createElement('canvas');
+          c.width=cw; c.height=ch;
+          c.style.cssText='position:absolute;top:0;left:0;width:'+cw+'px;height:'+ch+'px;display:block';
+          c.getContext('2d').drawImage(vid,(cw-vw*s)/2,(ch-vh*s)/2,vw*s,vh*s);
+          p.insertBefore(c,vid);
+          vid.style.display='none';
+          p.style.height=ch+'px';
+        }catch(e){}
+      }
+      // Show greeting overlay on last frame (both iOS and desktop)
+      const overlay=document.getElementById('vidEndOverlay');
+      const greetEl=document.getElementById('vidEndGreeting');
+      const scrollBtn=document.getElementById('vidEndScroll');
+      if(overlay&&greetEl){
+        // Get current-language "Hurmatli Mehmonimiz" text
+        const greetText=document.getElementById('guestH1')?.textContent||'Hurmatli Mehmonimiz,';
+        overlay.classList.add('show');
+        // Start typing after overlay fades in (1.2s)
+        setTimeout(()=>{
+          typewriter(greetEl,greetText,60,()=>{
+            // Show scroll button after typing completes
+            if(scrollBtn) scrollBtn.classList.add('show');
+          });
+        },800);
+        // Scroll button scrolls past the intro-poster
+        if(scrollBtn){
+          scrollBtn.addEventListener('click',()=>{
+            const introPoster=vid.closest('.intro-poster');
+            const target=introPoster ? introPoster.getBoundingClientRect().bottom+window.scrollY : window.innerHeight;
+            window.scrollTo({top:target,behavior:'smooth'});
+          },{once:true});
+        }
+      }
     },{once:true});
     // Stall monitor: poll currentTime — more reliable than 'waiting' event on Android Chrome
     let lastT=-1,stallN=0;
