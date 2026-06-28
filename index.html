@@ -935,7 +935,19 @@ if(CONFIG.music) audio.src=CONFIG.music;
   window._vidBlobUrl=null;
   fetch("assets/video.mp4")
     .then(r=>{if(!r.ok)throw 0;return r.blob();})
-    .then(blob=>{window._vidBlobUrl=URL.createObjectURL(blob);})
+    .then(blob=>{
+      const url=URL.createObjectURL(blob);
+      window._vidBlobUrl=url;
+      // Pre-swap src NOW while cover is still fully opaque.
+      // The brief black loading frame is hidden by the cover,
+      // so on click we just seek+play with no visible flash.
+      if(!opened){
+        vid.src=url;
+        const restoreFirst=()=>{try{vid.currentTime=0.001;}catch(e){}};
+        if(vid.readyState>=2) restoreFirst();
+        else vid.addEventListener('loadeddata',restoreFirst,{once:true});
+      }
+    })
     .catch(()=>{/* fallback: native streaming on play */});
 })();
 musicBtn.addEventListener("click",()=>{
@@ -1006,13 +1018,9 @@ document.getElementById("openBtn").addEventListener("click",()=>{
   }
   // play video inside user-gesture context
   if(vid){
-    if(window._vidBlobUrl){
-      // Blob ready: swap src to memory-backed URL, then play — no streaming stalls on iOS
-      vid.src=window._vidBlobUrl;
-    } else {
-      // Blob not ready yet (very fast tap): play from native streaming
-      vid.currentTime=0;
-    }
+    // Src already swapped to blob during background load (no flash on click).
+    // If blob wasn't ready yet (very fast tap), play from current native src.
+    vid.currentTime=0;
     vid.play().catch(()=>{});
     vid.addEventListener("ended",()=>{
       vid.pause();
