@@ -992,10 +992,13 @@ document.getElementById("openBtn").addEventListener("click",()=>{
   // fade cover out (no slide, just opacity)
   cover.classList.add("gone");
   setTimeout(()=>{cover.style.display="none";},1050);
-  // unlock scroll
-  document.body.classList.remove("locked");
-  observeReveals();
-  observeTw();
+  // Delay unlock by 80ms: cover is still ~92% opaque at that point,
+  // so the bg change (dark→cream) is hidden and causes no visible flash.
+  setTimeout(()=>{
+    document.body.classList.remove("locked");
+    observeReveals();
+    observeTw();
+  },80);
   // music
   if(CONFIG.music){
     musicBtn.style.display="flex";
